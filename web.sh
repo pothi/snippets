@@ -1,5 +1,21 @@
 #!/bin/bash
 
+# Script Name: web.sh
+# Script URI: https://github.com/pothi/linux-bootstrap-snippets
+# Version: 2.0
+# Description: automatically reates primary user (web) or creates additional users
+# Author: Pothi Kalimuthu (@pothi)
+# Author URI: https://www.tinywp.in/
+
+# Usage:
+# bash web.sh newusername
+
+# Changelog
+# 2.0
+#   - Jan 19, 2017
+#   - Changed default to web from client
+#   - changed the name from client.sh to web.sh
+
 # TODO:
 # Setup MySecureShell
 
@@ -33,25 +49,25 @@ if [ "$MY_SSH_USER" != '' ]; then
 
 fi
 
-if [ ! -e "/home/client/" ]; then
+if [ ! -e "/home/web/" ]; then
     groupadd --gid=1010 $MY_SFTP_USER &> /dev/null
-    useradd --uid=1010 --gid=1010 --shell=/usr/bin/zsh -m --home-dir /home/client/ $MY_SFTP_USER &> /dev/null
+    useradd --uid=1010 --gid=1010 --shell=/usr/bin/zsh -m --home-dir /home/web/ $MY_SFTP_USER &> /dev/null
 
-    groupadd client &> /dev/null
+    groupadd web &> /dev/null
 
-    HOME_DIR=client
+    HOME_DIR=web
 
 else
     useradd --shell=/usr/bin/zsh -m $MY_SFTP_USER &> /dev/null
     if [ "$?" != 0 ]; then
-        echo 'Usage client.sh username'; exit 1
+        echo 'Usage web.sh username'; exit 1
     fi
 
     HOME_DIR=${MY_SFTP_USER}
 fi
 
-# "client" is meant for SFTP only user/s
-gpasswd -a $MY_SFTP_USER client &> /dev/null
+# "web" is meant for SFTP only user/s
+gpasswd -a $MY_SFTP_USER web &> /dev/null
 
 mkdir -p /home/${HOME_DIR}/{.aws,.composer,.ssh,.well-known,Backup,bin,git,log,others,php/session,scripts,sites,src,tmp,mbox,.npm,.wp-cli} &> /dev/null
 mkdir -p /home/${HOME_DIR}/Backup/{files,databases}
@@ -60,23 +76,23 @@ chown -R $MY_SFTP_USER:$MY_SFTP_USER /home/${HOME_DIR}
 chown root:root /home/${HOME_DIR}
 chmod 755 /home/${HOME_DIR}
 
-# if the text 'match group client' isn't found, then
+# if the text 'match group web' isn't found, then
 # insert it only once
-if ! grep "Match group client" /etc/ssh/sshd_config &> /dev/null ; then
+if ! grep "Match group web" /etc/ssh/sshd_config &> /dev/null ; then
     # remove the existing subsystem
     sed -i 's/^Subsystem/### &/' /etc/ssh/sshd_config
 
     # add new
 echo '
 Subsystem sftp internal-sftp
-    Match group client
+    Match group web
     ChrootDirectory %h
     X11Forwarding no
     AllowTcpForwarding no
     ForceCommand internal-sftp
 ' >> /etc/ssh/sshd_config
 
-fi # /Match group client
+fi # /Match group web
 
 if ! grep "$MY_SFTP_USER" /etc/ssh/sshd_config &> /dev/null ; then
   sed -i '/AllowUsers/ s/$/ '$MY_SFTP_USER'/' /etc/ssh/sshd_config
@@ -114,7 +130,7 @@ sed -i '/^[[:space:]]*$/d' ${FPM_DIR}${MY_SFTP_USER}.conf
 fi
 
 echo
-echo 'All done. Setup the password for your client by running...'
+echo 'All done. Setup the password for your web by running...'
 echo
 echo "passwd $MY_SFTP_USER"
 echo
