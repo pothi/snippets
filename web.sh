@@ -2,7 +2,7 @@
 
 # Script Name: web.sh
 # Script URI: https://github.com/pothi/linux-bootstrap-snippets
-# Version: 2.1
+# Version: 2.2
 # Description: automatically reates primary user (web) or creates additional users
 # Author: Pothi Kalimuthu (@pothi)
 # Author URI: https://www.tinywp.in/
@@ -11,6 +11,9 @@
 # bash web.sh newusername
 
 # Changelog
+# 2.2
+#   - Jan 25, 2017
+#   - test ssh and php-fpm config before restarting the daemons
 # 2.1
 #   - Jan 25, 2017
 #   - change the default 'web' into a variable
@@ -133,9 +136,25 @@ Subsystem sftp internal-sftp
 
 fi # /Match group ${BASE_NAME}
 
-systemctl restart sshd &> /dev/null
+echo 'Testing the modified SSH config'
+/usr/sbin/sshd –t &> /dev/null
 if [ "$?" != 0 ]; then
-  service ssh restart
+    echo 'Something is messed up in the SSH config file'
+    echo 'Please re-run after fixing errors'
+    echo "See the logfile ${LOG_FILE} for details of the error"
+    echo 'Exiting pre-maturely'
+    exit 1
+else
+    echo 'Cool. Things seem fine. Restarting SSH Daemon...'
+    systemctl restart sshd &> /dev/null
+    if [ "$?" != 0 ]; then
+        echo 'Something went wrong while setting up PHP-FPM! See below...'; echo; echo;
+        systemctl status sshd
+    else
+        echo 'SSH Daemon restarted!'
+        echo 'WARNING: Try to create another SSH connection from another terminal, just incase...!'
+        echo 'Do NOT ignore this warning'
+    fi
 fi
 
 FPM_DIR=/etc/php/7.0/fpm/pool.d/
@@ -155,10 +174,21 @@ catch_workers_output = yes
 # remove the empty line at the start of the file
 sed -i '/^[[:space:]]*$/d' ${FPM_DIR}${MY_SFTP_USER}.conf
 
+    echo 'Testing the modified PHP-FPM pool config'
+    /usr/sbin/php-fpm7.0 -t &> /dev/null
+    if [ "$?" != 0 ]; then
+        echo "php-fpm test failed. check your log at ${LOG_FILE}"
+        echo 'exiting'
+        exit 1
+    fi
+
+    echo 'Cool. Things seem fine. Restarting PHP-FPM Daemon...'
     systemctl restart php7.0-fpm &> /dev/null
     if [ "$?" != 0 ]; then
         echo 'Something went wrong while setting up PHP-FPM! See below...'; echo; echo;
         systemctl status php7.0-fpm
+    else
+        echo 'PHP-FPM restarted.'
     fi
 fi
 
