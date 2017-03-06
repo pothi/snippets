@@ -27,9 +27,8 @@ if [ -f /etc/php/${PHP_VERSION}/fpm/pool.d/${USER_TO_REMOVE}.conf ]; then
     echo 'PHP-FPM conf removed!'; echo
 else
     echo "Could not remove the PHP-FPM conf file at /etc/php/${PHP_VERSION}/fpm/pool.d/${USER_TO_REMOVE}.conf";
-    echo "File is not found"
-    echo
-    echo 'Continuing...'
+    echo "File is not found";
+    echo 'Continuing...'; echo
 fi
 
 # STEP #1 - Remove the user files

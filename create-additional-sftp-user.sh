@@ -100,7 +100,7 @@ fi
     # echo 'Exiting pre-maturely'
     # exit 1
 # else
-    echo 'Cool. Things seem fine. Restarting SSH Daemon...'
+    echo; echo 'Cool. Things seem fine. Restarting SSH Daemon...'
     systemctl restart sshd &> /dev/null
     if [ "$?" != 0 ]; then
         echo 'Something went wrong while setting up PHP-FPM! See below...'; echo; echo;
@@ -108,7 +108,7 @@ fi
     else
         echo 'SSH Daemon restarted!'
         echo 'WARNING: Try to create another SSH connection from another terminal, just incase...!'
-        echo 'Do NOT ignore this warning'
+        echo 'Do NOT ignore this warning'; echo
     fi
 # fi
 
@@ -148,7 +148,7 @@ sed -i '/^[[:space:]]*$/d' ${FPM_DIR}${MY_SFTP_USER}.conf
 fi
 
 echo
-echo 'All done. Setup the password for your ${MY_SFTP_USER} by running...'
+echo "All done. Setup the password for your new SFTP User '${MY_SFTP_USER}' by running..."
 echo
 echo "passwd $MY_SFTP_USER"
 echo
