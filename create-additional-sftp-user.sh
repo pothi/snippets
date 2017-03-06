@@ -74,7 +74,9 @@ chmod 755 /home/${HOME_DIR}
 # fi
 # latest way of doing things
 # ref: https://knowledgelayer.softlayer.com/learning/how-do-i-permit-specific-users-ssh-access
-groupadd –r sshusers
+if [ ! $(getent group sshusers)  ]; then
+    groupadd sshusers
+fi
 
 # if AllowGroups line doesn't exist, insert it only once!
 # if ! grep -i "AllowGroups" ${SSHD_CONFIG} &> /dev/null ; then
@@ -85,17 +87,19 @@ groupadd –r sshusers
 # fi
 
 # add new users into the 'sshusers' now
-usermod -a -G sshusers ${MY_SFTP_USER}
+if [ $(getent group sshusers)  ]; then
+    usermod -a -G sshusers ${MY_SFTP_USER}
+fi
 
-echo 'Testing the modified SSH config'
-/usr/sbin/sshd –t &> /dev/null
-if [ "$?" != 0 ]; then
-    echo 'Something is messed up in the SSH config file'
-    echo 'Please re-run after fixing errors'
-    echo "See the logfile ${LOG_FILE} for details of the error"
-    echo 'Exiting pre-maturely'
-    exit 1
-else
+# echo 'Testing the modified SSH config'
+# /usr/sbin/sshd –t &> /dev/null
+# if [ "$?" != 0 ]; then
+    # echo 'Something is messed up in the SSH config file'
+    # echo 'Please re-run after fixing errors'
+    # echo "See the logfile ${LOG_FILE} for details of the error"
+    # echo 'Exiting pre-maturely'
+    # exit 1
+# else
     echo 'Cool. Things seem fine. Restarting SSH Daemon...'
     systemctl restart sshd &> /dev/null
     if [ "$?" != 0 ]; then
@@ -106,7 +110,7 @@ else
         echo 'WARNING: Try to create another SSH connection from another terminal, just incase...!'
         echo 'Do NOT ignore this warning'
     fi
-fi
+# fi
 
 FPM_DIR=/etc/php/7.0/fpm/pool.d/
 if [ -d $FPM_DIR ]; then
