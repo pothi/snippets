@@ -2,7 +2,7 @@
 
 # Script Name: web.sh
 # Script URI: https://github.com/pothi/linux-bootstrap-snippets
-# Version: 2.2
+# Version: 2.3
 # Description: automatically reates primary user (web) or creates additional users
 # Author: Pothi Kalimuthu (@pothi)
 # Author URI: https://www.tinywp.in/
@@ -11,6 +11,9 @@
 # bash web.sh newusername
 
 # Changelog
+# 2.3
+#   - March 6, 2017
+#   - create only additional SFTP user
 # 2.2
 #   - Jan 25, 2017
 #   - test ssh and php-fpm config before restarting the daemons
@@ -29,68 +32,35 @@
 # Setup MySecureShell
 
 # Variables - you may send these as command line options
-BASE_NAME=web
 MY_SFTP_USER=
-
-MY_SSH_USER=
 
 #--- please do not edit below this file ---#
 
 SSHD_CONF=/etc/ssh/sshd_config
 
-LOG_FILE=${HOME}/log/web.sh.log
+LOG_FILE=${HOME}/log/create-additional-sftp-user.log
 exec > >(tee -a ${LOG_FILE} )
 exec 2> >(tee -a ${LOG_FILE} >&2)
 
 # import or set the default/s
 if [ "$1" != "" ]; then
     MY_SFTP_USER=$1
-    elif [ -e "/root/.my.exports" ]; then
-        source /root/.my.exports
     else
-        echo "MY_SFTP_USER is not defined in '/root/.my.exports'."
-        echo "Nor it is supplied as an option to this script."
-        echo; echo "Common Usage: $0 sftp_username"; echo
-        echo "Exiting!"
+        echo; echo "Usage: $0 sftp_username"; echo
         exit 1
 fi
 
-#-- Setup SSH User --#
-if [ "$MY_SSH_USER" != '' ]; then
-  useradd --shell=/usr/bin/zsh --create-home $MY_SSH_USER
-    if [ "$?" != 0 ]; then
-        echo; echo 'MY_SSH_USER already exists. Continuing to run the script.'; echo
-    fi
-
-  echo $MY_SSH_USER' ALL = NOPASSWD : ALL' >> /etc/sudoers.d/$MY_SSH_USER && chmod 440 /etc/sudoers.d/$MY_SSH_USER
-
-  # Add MY_SSH_USER in the "AllowUsers', if not exists
-  if ! grep "$MY_SSH_USER" ${SSHD_CONFIG} &> /dev/null ; then
-      sed -i '/AllowUsers/ s/$/ '$MY_SSH_USER'/' ${SSHD_CONFIG}
-  fi
+useradd -m $MY_SFTP_USER &> /dev/null
+if [ "$?" != 0 ]; then
+    echo 'Something went wrong while creating the new user. Probably, the supplied username already exists in the server!'; exit 1
 fi
-# end of SSH User setup #
 
-if [ ! -e "/home/${BASE_NAME}/" ]; then
-    groupadd --gid=1010 $MY_SFTP_USER &> /dev/null
-    useradd --uid=1010 --gid=1010 --shell=/usr/bin/zsh -m --home-dir /home/${BASE_NAME}/ $MY_SFTP_USER &> /dev/null
-
-    groupadd ${BASE_NAME} &> /dev/null
-
-    HOME_DIR=${BASE_NAME}
-else
-    useradd --shell=/usr/bin/zsh -m $MY_SFTP_USER &> /dev/null
-    if [ "$?" != 0 ]; then
-        echo 'Usage web.sh username'; exit 1
-    fi
-
-    HOME_DIR=${MY_SFTP_USER}
-fi
+HOME_DIR=${MY_SFTP_USER}
 
 # "web" is meant for SFTP only user/s
 gpasswd -a $MY_SFTP_USER ${BASE_NAME} &> /dev/null
 
-mkdir -p /home/${HOME_DIR}/{.aws,.composer,.ssh,.well-known,Backup,bin,git,log,others,php/session,scripts,sites,src,tmp,mbox,.npm,.wp-cli} &> /dev/null
+mkdir -p /home/${HOME_DIR}/{.aws,.composer,.nano,.selected-editor,.ssh,.well-known,Backup,bin,git,log,others,php/session,scripts,sites,src,tmp,mbox,.npm,.wp-cli} &> /dev/null
 mkdir -p /home/${HOME_DIR}/Backup/{files,databases}
 
 chown -R $MY_SFTP_USER:$MY_SFTP_USER /home/${HOME_DIR}
@@ -107,34 +77,15 @@ chmod 755 /home/${HOME_DIR}
 groupadd –r sshusers
 
 # if AllowGroups line doesn't exist, insert it only once!
-if ! grep -i "AllowGroups" ${SSHD_CONFIG} &> /dev/null ; then
-    echo '
+# if ! grep -i "AllowGroups" ${SSHD_CONFIG} &> /dev/null ; then
+    # echo '
 # allow users within the (system) group "sshusers"
-AllowGroups sshusers
-' >> ${SSHD_CONFIG}
-fi
+# AllowGroups sshusers
+# ' >> ${SSHD_CONFIG}
+# fi
 
 # add new users into the 'sshusers' now
 usermod -a -G sshusers ${MY_SFTP_USER}
-
-# if the text 'match group ${BASE_NAME}' isn't found, then
-# insert it only once
-if ! grep "Match group ${BASE_NAME}" ${SSHD_CONFIG} &> /dev/null ; then
-    # remove the existing subsystem
-    sed -i 's/^Subsystem/### &/' ${SSHD_CONFIG}
-
-    # add new subsystem
-echo '
-# setup internal SFTP
-Subsystem sftp internal-sftp
-    Match group ${BASE_NAME}
-    ChrootDirectory %h
-    X11Forwarding no
-    AllowTcpForwarding no
-    ForceCommand internal-sftp
-' >> ${SSHD_CONFIG}
-
-fi # /Match group ${BASE_NAME}
 
 echo 'Testing the modified SSH config'
 /usr/sbin/sshd –t &> /dev/null
