@@ -11,7 +11,7 @@ LOG_FILE=$LOGDIR/phpmyadmin-updates.log
 exec > >(tee -a ${LOG_FILE} )
 exec 2> >(tee -a ${LOG_FILE} >&2)
 
-ADMIN_EMAIL=pothi@tinywp.com
+ADMIN_EMAIL=user@example.com
 SITESDIR=${HOME}sites
 
 PMADIR=${SITESDIR}/phpmyadmin
