@@ -4,7 +4,7 @@
 # It will send an email to $ADMIN_EMAIL, if the (free available) percentage of space is >= 90%.
 # -------------------------------------------------------------------------
 # Set ADMIN_EMAIL email so that you can get email.
-ADMIN_EMAIL="pothi@tinywp.com"
+ADMIN_EMAIL="user@example.com"
 
 # set ALERT_LEVEL level 80% is default
 ALERT_LEVEL=80
