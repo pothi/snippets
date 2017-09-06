@@ -14,12 +14,15 @@ LOG_FILE=$LOGDIR/phpmyadmin-updates.log
 exec > >(tee -a ${LOG_FILE} )
 exec 2> >(tee -a ${LOG_FILE} >&2)
 
-ADMIN_EMAIL=user@example.com
+# ADMIN_EMAIL=user@example.com
+ADMIN_EMAIL=pma@localhost
 SITESDIR=${HOME}
 
 PMADIR=${SITESDIR}/phpmyadmin
 
 ###### PLEASE DO NOT EDIT BELOW THIS LINE ######
+
+dbname=phpmyadmin
 
 function send_email() {
      echo "PhpMyAdmin Update didn't go through on server $(hostname -f | awk -F. '{print $2"."$3}'), $(date)" | \
@@ -28,6 +31,13 @@ function send_email() {
 
 TEMP_FILE='/tmp/pma-version.html'
 PMAOLD=/tmp/old-pma
+randomBlowfishSecret=`openssl rand -base64 32`
+
+source ~/.envrc &> /dev/null
+
+if [ -z "$pma_db_user" ]; then
+    send_email
+fi
 
 ## check for all directories
 if [ ! -d "$LOGDIR" ]; then
@@ -135,22 +145,31 @@ if [ -s ${PMAOLD}/config.inc.php ]; then
         exit 1
     fi
 else
-    cp ${PMADIR}/config.sample.inc.php ${PMADIR}/config.inc.php
+    pmaconfigfile=${PMADIR}/config.inc.php
+    cp ${PMADIR}/config.sample.inc.php $pmaconfigfile
     # Unhide the user/password config
-    sed -i '/control/ s:^// ::' ${PMADIR}/config.inc.php
+    sed -i '/control/ s:^// ::' $pmaconfigfile
 
     # Unhide storage database and tables
     sed -i '/pma/ s:^// ::' ${PMADIR}/config.inc.php
 
-    # Setup the password
-    sed -i '/controlpass/ s:pmapass:&'$HOME':' ${PMADIR}/config.inc.php
+    # Setup the username and password
+    sed -i "/controluser/ s:=.*:= '${pma_db_user}';:" $pmaconfigfile
+    sed -i "/controlpass/ s:=.*:= '${pma_db_pass}';:" $pmaconfigfile
+
+    # setup blowfish
+    sed -i "/blowfish_secret/ s:=.*:= '${randomBlowfishSecret}';:" $pmaconfigfile
+
+    # create the tables
+    mysql -u$pma_db_user -p$pma_db_pass phpmyadmin < ${PMADIR}/sql/create_tables.sql &> /dev/null
 
     # Hide unnecessary databases
     # sed -i "$ a\$cfg['Servers'][\$i]['hide_db'] = '^information_schema|performance_schema|mysql|phpmyadmin\$';" ${PMADIR}/config.inc.php
 fi
 
-# remove old files
-rm -rf $PMAOLD &> /dev/null
+# remove old files and phpinfo.php file
+rm -r $PMAOLD &> /dev/null
+rm ${PMADIR}/phpinfo.php &> /dev/null
 
 echo 'Done upgrading PhpMyadmin...'
 echo
