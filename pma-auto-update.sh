@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# TODO
+# user pwgen to generate random username and password
+
 # Script to automate PhpMyAdmin updates
 # To manually switch to another version, use...
 # bash pma-auto-update.sh version_number
