@@ -72,7 +72,7 @@ echo 'Date: '$(date +%F)
 echo 'Time: '$(date +%H-%M-%S)
 
 if [ -d ${PMADIR} ]; then
-    CURRENT_VERSION=$(ls ${PMADIR}/RELEASE-DATE-* | sed 's:'${PMADIR}'/RELEASE-DATE-::')
+    CURRENT_VERSION=$(ls ${PMADIR}/RELEASE-DATE-* 2> /dev/null | sed 's:'${PMADIR}'/RELEASE-DATE-::')
     echo 'Current Version: '$CURRENT_VERSION
 else
     CURRENT_VERSION=''
