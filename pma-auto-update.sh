@@ -60,7 +60,7 @@ if [ "$?" != '0' ]; then
     exit 1
 fi
 
-NEW_VERSION=$(grep -i '.h2.phpmyadmin' $TEMP_FILE | head -1 | sed 's_</\?h2>__g' | awk '{print $2}')
+NEW_VERSION=$( grep -w '<h2>phpMyAdmin' $TEMP_FILE | head -1 | awk '{print $2}' | awk -F'<' '{print $1}' )
 if [ "$NEW_VERSION" == '' ]; then
     echo 'Something wrong in identifying the new version'
     send_email
@@ -151,17 +151,17 @@ else
     pmaconfigfile=${PMADIR}/config.inc.php
     cp ${PMADIR}/config.sample.inc.php $pmaconfigfile
     # Unhide the user/password config
-    sed -i '/control/ s:^// ::' $pmaconfigfile
+    sed -i -e '/control/ s:^// ::' $pmaconfigfile
 
     # Unhide storage database and tables
-    sed -i '/pma/ s:^// ::' ${PMADIR}/config.inc.php
+    sed -i -e '/pma/ s:^// ::' ${PMADIR}/config.inc.php
 
     # Setup the username and password
-    sed -i "/controluser/ s:=.*:= '${pma_db_user}';:" $pmaconfigfile
-    sed -i "/controlpass/ s:=.*:= '${pma_db_pass}';:" $pmaconfigfile
+    sed -i -e "/controluser/ s:=.*:= '${pma_db_user}';:" $pmaconfigfile
+    sed -i -e "/controlpass/ s:=.*:= '${pma_db_pass}';:" $pmaconfigfile
 
     # setup blowfish
-    sed -i "/blowfish_secret/ s:=.*:= '${randomBlowfishSecret}';:" $pmaconfigfile
+    sed -i -e "/blowfish_secret/ s:=.*:= '${randomBlowfishSecret}';:" $pmaconfigfile
 
     # create the tables
     mysql -u$pma_db_user -p$pma_db_pass phpmyadmin < ${PMADIR}/sql/create_tables.sql &> /dev/null
