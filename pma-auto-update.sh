@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# raw url: https://github.com/pothi/linux-bootstrap-snippets/raw/master/pma-auto-update.sh
+
 # Script to automate PhpMyAdmin updates
 # To manually switch to another version, use...
 # bash pma-auto-update.sh version_number
@@ -160,7 +162,7 @@ if [ -s ~/config.inc.php ]; then
         exit 1
     fi
 else
-	echo 'Creating a new config.inc.php file...'
+    echo 'Creating a new config.inc.php file...'
 
     pmaconfigfile=${PMADIR}/config.inc.php
     cp ${PMADIR}/config.sample.inc.php $pmaconfigfile
