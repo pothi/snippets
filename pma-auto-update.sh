@@ -2,6 +2,9 @@
 
 # raw url: https://github.com/pothi/linux-bootstrap-snippets/raw/master/pma-auto-update.sh
 
+# TODO: implement as many things as possible from
+# https://docs.phpmyadmin.net/en/latest/setup.html#securing-your-phpmyadmin-installation
+
 # Script to automate PhpMyAdmin updates
 # To manually switch to another version, use...
 # bash pma-auto-update.sh version_number
@@ -115,7 +118,7 @@ if [ ! -d "$PMADIR" ]; then
     fi
 fi
 
-echo 'Hold on! Downloading the latest version...'
+
 # wget --no-check-certificate -q https://files.phpmyadmin.net/phpMyAdmin/${version}/phpMyAdmin-${version}-english.tar.gz -O /tmp/phpmyadmin-current-version.tar.gz
 curl -sLo /tmp/phpmyadmin-current-version.tar.gz https://files.phpmyadmin.net/phpMyAdmin/${version}/phpMyAdmin-${version}-english.tar.gz
 if [ "$?" != '0' ]; then
@@ -153,6 +156,9 @@ if [ "$?" != '0' ]; then
     send_email
     exit 1
 fi
+
+# security - https://docs.phpmyadmin.net/en/latest/setup.html#securing-your-phpmyadmin-installation
+rm -r ${PMADIR}/setup
 
 if [ -s ~/config.inc.php ]; then
     cp ~/config.inc.php ${PMADIR}/
