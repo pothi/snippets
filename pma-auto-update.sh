@@ -67,7 +67,9 @@ if [ "$NEW_VERSION" == '' ]; then
     send_email
 fi
 
-rm $TEMP_FILE
+# remove old temp files if exist
+rm -rf $PMAOLD &> /dev/null
+rm $TEMP_FILE &> /dev/null
 
 echo
 
@@ -132,26 +134,37 @@ fi
 cd - &> /dev/null
 
 # backup the installed version and switch to new version
-mv $PMADIR $PMAOLD &> /dev/null
+if [ -s ${PMADIR}/config.inc.php ] ; then
+    cp ${PMADIR}/config.inc.php ~/
+fi
 
-mv /tmp/phpMyAdmin-${version}-english $PMADIR
- 
+cp -a $PMADIR $PMAOLD &> /dev/null
+
+rm -rf $PMADIR/* &> /dev/null
+
+mkdir $PMADIR &> /dev/null
+
+cp -a /tmp/phpMyAdmin-${version}-english/* $PMADIR/
+
 if [ "$?" != '0' ]; then
     echo 'Something wrent wrong, while moving directories!'
     send_email
     exit 1
 fi
 
-if [ -s ${PMAOLD}/config.inc.php ]; then
-    cp ${PMAOLD}/config.inc.php ${PMADIR}/
+if [ -s ~/config.inc.php ]; then
+    cp ~/config.inc.php ${PMADIR}/
     if [ "$?" != '0' ]; then
         echo 'Something wrent wrong, while copying the config file!'
         send_email
         exit 1
     fi
 else
+	echo 'Creating a new config.inc.php file...'
+
     pmaconfigfile=${PMADIR}/config.inc.php
     cp ${PMADIR}/config.sample.inc.php $pmaconfigfile
+
     # Unhide the user/password config
     sed -i -e '/control/ s:^// ::' $pmaconfigfile
 
@@ -173,7 +186,8 @@ else
 fi
 
 # remove old files and phpinfo.php file
-rm -r $PMAOLD &> /dev/null
+rm -rf $PMAOLD &> /dev/null
+rm $TEMP_FILE &> /dev/null
 rm ${PMADIR}/phpinfo.php &> /dev/null
 
 echo 'Done upgrading PhpMyadmin...'
