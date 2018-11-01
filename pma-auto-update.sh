@@ -167,6 +167,13 @@ if [ -s ~/config.inc.php ]; then
         send_email
         exit 1
     fi
+
+    [ -d ${PMA_OLD}/tmp ] && mv ${PMA_OLD}/tmp ${PMA_DIR}/
+    if [ "$?" != '0' ]; then
+        echo 'Something wrent wrong, while moving the tmp directory!'
+        send_email
+        exit 1
+    fi
 else
     echo 'Creating a new config.inc.php file...'
 
