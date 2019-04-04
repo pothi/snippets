@@ -19,6 +19,8 @@ LOG_FILE=$LOGDIR/phpmyadmin-updates.log
 exec > >(tee -a ${LOG_FILE} )
 exec 2> >(tee -a ${LOG_FILE} >&2)
 
+echo "Date / Time: $(date +%c)"
+
 # change this to some real email, if you wish
 ADMIN_EMAIL=pma@localhost
 
