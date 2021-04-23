@@ -1,10 +1,17 @@
 #!/bin/bash
 # set -x
-# Shell script to monitor or watch the disk space
-# It will send an email to $ADMIN_EMAIL, if the (free available) percentage of space is >= 90%.
+
+# Shell script to send an email when the disk usage is high
+
+# It will send an email to $ADMIN_EMAIL, when reaching the threshold set by ALERT_LEVEL
 # -------------------------------------------------------------------------
 # Set ADMIN_EMAIL email so that you can get email.
-ADMIN_EMAIL="user@example.com"
+# set SERVER_ID to hostname or 'hostname -f' or something different depending on your requirement
+
+ADMIN_EMAIL=
+
+# Server Identifier
+SERVER_ID=
 
 # set ALERT_LEVEL level 80% is default
 ALERT_LEVEL=80
@@ -24,7 +31,7 @@ do
   partition=$(echo $output | awk '{print $2}')
   if [ $usep -ge $ALERT_LEVEL ] ; then
      echo "Running out of space \"$partition ($usep%)\" on server $(hostname -f | awk -F. '{print $2"."$3}'), $(date)" | \
-       mail -s "ALERT: Almost out of disk space $usep%" $ADMIN_EMAIL
+       mail -s "ALERT on ${SERVER_ID} Server: Almost out of disk space $usep%" $ADMIN_EMAIL
   fi
 done
 }
