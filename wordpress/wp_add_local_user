@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# programming env: these switches turn some bugs into errors
+set -o errexit -o pipefail -o noclobber -o nounset
+
+wp_cli=$(which wp)
+
+[ -f ~/.envrc ] && source ~/.envrc
+
+user_pass=${WP_LOCAL_USER_PASSWORD:-'N0n*'}
+
+if [ $user_pass = "N0n*" ]; then
+    echo 'No user password is supplied. Setting default password to "N0n*"'
+fi
+
+$wp_cli --path=$PWD user create focal focal@tinywp.com --role=administrator --user_pass=$user_pass
