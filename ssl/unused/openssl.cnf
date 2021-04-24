@@ -1,0 +1,27 @@
+[req]
+distinguished_name = req_distinguished_name
+req_extensions = v3_req
+# prompt = no
+
+[req_distinguished_name]
+# countryName = Country Name (2 letter code)
+countryName_default = IN
+# stateOrProvinceName = State or Province Name (full name)
+stateOrProvinceName_default = TN
+# localityName = Locality Name (eg, city)
+localityName_default = Srivilliputhur
+# organizationalUnitName	= Organizational Unit Name (eg, section)
+organizationalUnitName_default	= TinyWP
+# commonName = FQDN name
+commonName_default = Self-signed certificate
+commonName_max	= 64
+
+[ v3_req ]
+# Extensions to add to a certificate request
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = www.example.com
+DNS.2 = example.com
