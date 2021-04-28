@@ -6,12 +6,17 @@
 # date: 2021-04-22
 
 # programming env: these switches turn some bugs into errors
-set -o errexit -o pipefail -o noclobber -o nounset
+# set -o errexit -o pipefail -o noclobber -o nounset
 # set -x
 
 certbot_admin_email=${CERTBOT_ADMIN_EMAIL:-root@localhost}
 ssl_utility=/root/scripts/ssl-cert-check
-certbot_domain=$(basename "$RENEWED_LINEAGE")
+config_live_subdir=${RENEWED_LINEAGE:-""}
+prev_expiry_date=
+next_expiry_date=
+certbot_domain=
+
+[ ! -z "$config_live_subdir" ] && certbot_domain=$(basename "$config_live_subdir")
 
 # https://community.letsencrypt.org/t/environment-variables-available-in-etc-letsencrypt-renewal-hooks-scripts/102036
 
@@ -20,11 +25,11 @@ certbot_domain=$(basename "$RENEWED_LINEAGE")
 
 chmod +x $ssl_utility
 
-prev_expiry_date=$($ssl_utility -s $certbot_domain -b | awk '{print $3, $4, $5}')
+[ ! -z "$certbot_domain" ] && prev_expiry_date=$($ssl_utility -s $certbot_domain -b | awk '{print $3, $4, $5}')
 
 /usr/sbin/nginx -t && /usr/bin/systemctl restart nginx
 
-next_expiry_date=$($ssl_utility -s $certbot_domain -b | awk '{print $3, $4, $5}')
+[ ! -z "$certbot_domain" ] && next_expiry_date=$($ssl_utility -s $certbot_domain -b | awk '{print $3, $4, $5}')
 
 echo "Certificate for the domain '$certbot_domain' is renewed. \
     The old expiry date was '$prev_expiry_date' and the new expiry date is '$next_expiry_date'. \
