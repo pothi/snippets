@@ -27,7 +27,7 @@ chmod +x $ssl_utility
 
 [ ! -z "$certbot_domain" ] && prev_expiry_date=$($ssl_utility -s $certbot_domain -b | awk '{print $3, $4, $5}')
 
-/usr/sbin/nginx -t && /usr/bin/systemctl restart nginx
+$(which nginx) -t && $(which systemctl) restart nginx
 
 [ ! -z "$certbot_domain" ] && next_expiry_date=$($ssl_utility -s $certbot_domain -b | awk '{print $3, $4, $5}')
 
