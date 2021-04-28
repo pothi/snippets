@@ -21,7 +21,7 @@ certbot_domain=
 # https://community.letsencrypt.org/t/environment-variables-available-in-etc-letsencrypt-renewal-hooks-scripts/102036
 
 [ ! -d /root/scripts ] && mkdir /root/scripts
-[ ! -f $ssl_utility ] && wget -O $ssl_utility https://github.com/Matty9191/ssl-cert-check/raw/master/ssl-cert-check
+[ ! -f $ssl_utility ] && \curl -LsSo $ssl_utility https://github.com/Matty9191/ssl-cert-check/raw/master/ssl-cert-check
 
 chmod +x $ssl_utility
 
