@@ -64,7 +64,7 @@ fi
 # check for the latest version
 # wget -q -O $TEMP_FILE http://www.phpmyadmin.net/home_page/downloads.php
 # wget --no-check-certificate -q -O $TEMP_FILE https://www.phpmyadmin.net/downloads/
-curl -sLo $TEMP_FILE https://www.phpmyadmin.net/downloads/
+\curl -sLo $TEMP_FILE https://www.phpmyadmin.net/downloads/
 if [ "$?" != '0' ]; then
     echo 'Something wrent wrong while downloading the downloads.php file from phpmyadmin.net!'
     send_email
@@ -125,7 +125,7 @@ fi
 
 
 # wget --no-check-certificate -q https://files.phpmyadmin.net/phpMyAdmin/${version}/phpMyAdmin-${version}-english.tar.gz -O /tmp/phpmyadmin-current-version.tar.gz
-curl -sLo /tmp/phpmyadmin-current-version.tar.gz https://files.phpmyadmin.net/phpMyAdmin/${version}/phpMyAdmin-${version}-english.tar.gz
+\curl -sLo /tmp/phpmyadmin-current-version.tar.gz https://files.phpmyadmin.net/phpMyAdmin/${version}/phpMyAdmin-${version}-english.tar.gz
 if [ "$?" != '0' ]; then
     echo 'Something wrent wrong while downloading the version - '${version}
     send_email
