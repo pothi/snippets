@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# version: 1.0
-# date: 2019-11-22
+# version: 2.0
+# date: 2021-04-30
 
 # raw url: https://github.com/pothi/linux-bootstrap-snippets/raw/master/pma-auto-update.sh
 
@@ -71,10 +71,12 @@ if [ "$?" != '0' ]; then
     exit 1
 fi
 
-NEW_VERSION=$( grep -w '<h2>phpMyAdmin' $TEMP_FILE | head -1 | awk '{print $2}' | awk -F'<' '{print $1}' )
+NEW_VERSION=$( grep -o 'Download [0-9].[0-9].[0.9]' $TEMP_FILE | awk '{print $2}' )
+# NEW_VERSION=$( grep -w '<h2>phpMyAdmin' $TEMP_FILE | head -1 | awk '{print $2}' | awk -F'<' '{print $1}' )
 if [ "$NEW_VERSION" == '' ]; then
     echo 'Something wrong in identifying the new version'
     send_email
+    exit 1
 fi
 
 # remove old temp files if exist
@@ -212,3 +214,4 @@ rm ${PMADIR}/phpinfo.php &> /dev/null
 
 echo 'Done upgrading PhpMyadmin...'
 echo
+
