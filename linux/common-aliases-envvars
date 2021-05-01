@@ -49,6 +49,7 @@ export VISUAL=vi
 # export LANGUAGE="en_US"
 export LANG="en_US.UTF-8"
 export LC_ALL=$LANG
+export LC_CTYPE=$LANG
 
 export GEM_HOME=~/.gem
 export GEM_PATH=$GEM_HOME/bin
