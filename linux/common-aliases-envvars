@@ -55,7 +55,11 @@ export GEM_HOME=~/.gem
 export GEM_PATH=$GEM_HOME/bin
 
 # for history control - bash specific
-export HISTCONTROL=$HISTCONTROL:erasedups:ignorespace
+# ref: https://www.gnu.org/software/bash/manual/html_node/Bash-Variables.html#index-HISTCONTROL
+export HISTCONTROL=ignoreboth
+export HISTSIZE=-1
+export HISTFILESIZE=-1
+export HISTIGNORE='&':'[ ]*':cd:'cd .*':ls:ps:top:w
 
 ### ------------------------------ PATHS ------------------------------ ###
 
