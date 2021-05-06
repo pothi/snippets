@@ -1,55 +1,49 @@
 #!/bin/bash
 
+# version 2.0
+# changelog
+# version 2.0
+#   - date: 2021-05-06
+#   - migrate to AWS CC
+
 # logging everything
-log_file=~/log/cron.log
-exec > >(tee -a ${log_file} )
-exec 2> >(tee -a ${log_file} >&2)
+# log_file=~/log/cron.log
+# exec > >(tee -a ${log_file} )
+# exec 2> >(tee -a ${log_file} >&2)
 
-echo; echo "Script: $0"
-echo "Date / Time: $(date +%c)"
+# echo; echo "Script: $0"
+# echo "Date / Time: $(date +%c)"
 
-today=$(date +%F)
-backup_folder=~/Dropbox/backups/$(hostname)/pothi/crontabs
-backup_file=$backup_folder/crontab-$today
+# today=$(date +%F)
 
-[ ! -d $backup_location ] && mkdir -p $backup_location
 [ ! -d ~/tmp ] && mkdir ~/tmp
 crontab -l > ~/tmp/crontab
-original=~/tmp/crontab
+current_cron=~/tmp/crontab
+gitdir=${1:-""}
+cron_user=${2:-""}
 
-file_to_check=$backup_file
+if [ "x$gitdir" = "x" ]
+then
+    echo; echo "Usage: $0 /path/to/git/repo [hostname-cronuser]"; echo
+    exit 1
+fi
 
-for i in $(seq 1 31);
-do
-    if [ ! -f $file_to_check ] ; then
-        # echo "Value of i: $i"
-        olddate=$(date --date="$i days ago" +%F)
-        file_to_check=$backup_folder/crontab-$olddate
-    else
-        diff $original $file_to_check &> /dev/null
-        if [ $? -ne 0 ] ; then
-            mv $original $backup_file
-            echo "New backup is taken. You can find it at '$backup_location'."
-        else
-            olddate=$(date --date="$(expr $i - 1) days ago" +%F)
-            echo "No difference. Last backup was done on $olddate."
-            # if [ $i -eq 31 ]; then
-                # take monthly backup
-                # mv $original $backup_file
-                # echo 'Monthly backup is taken.'
-            # fi
-        fi
-        break
-        # echo "Value of i: $i"
-    fi
+if [ "x$cron_user" = "x" ]
+then
+    cron_user=$(hostname)-$USER
+fi
 
-    # if run after more than a month
-    if [ $i -eq 31 ]; then
-        # take monthly backup
-        mv $original $backup_file
-        echo "A new backup is taken, since the last backup is older than a month!"
-        echo "You may find the new backup at '$backup_location'."
-    fi
-done
+# echo "Cron User: '$cron_user'"
 
+cd $gitdir
+echo "Pulling changes..."
+git pull --quiet
+cp $current_cron $gitdir/$cron_user
+git commit -am "Auto commit for $cron_user by $0" --quiet
+echo "Pushing changes..."
+git push --quiet
+
+rm $current_cron
+
+echo "Done."
 echo
