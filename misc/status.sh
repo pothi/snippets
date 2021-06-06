@@ -1,6 +1,9 @@
 #!/bin/bash
 
-# version: 1.1
+# version: 1.2
+# 1.2
+#   - date: 20210605
+#   - include disk usage of /var/lib/mysql
 # 1.1
 #   - in "tail -50 /home/web/log/backups.log | head -6", instead of tailing last 50 lines, tail only -50 +6 lines using head command.
 # 1.0
@@ -10,6 +13,9 @@
 
 echo; echo Disk free info...
 df -h | tail -n +2 | awk '$6 == "/" {print $0}'
+
+echo; echo "Usage of /var/lib/mysql..."
+du -hs /var/lib/mysql
 
 echo; echo Memory info...
 free -m
