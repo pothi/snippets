@@ -3,7 +3,7 @@
 # version: 2.2
 # date: 2021-06-09
 
-# raw url: https://github.com/pothi/linux-bootstrap-snippets/raw/master/pma-auto-update.sh
+# raw url: https://raw.githubusercontent.com/pothi/snippets/main/misc/pma-auto-update.sh
 
 # TODO: implement as many things as possible from
 # https://docs.phpmyadmin.net/en/latest/setup.html#securing-your-phpmyadmin-installation
