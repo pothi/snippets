@@ -61,7 +61,7 @@ if [ ! -d ~/log ]; then
     exit 1
 fi
 
-[ ! -d ~/backups ] && mkidr ~/backups
+[ ! -d ~/backups ] && mkdir ~/backups
 if [ ! -d ~/backups ]; then
     echo; echo "Backup directory doesn't exist. Please create it manually and re-run this script."; echo
     send_email
