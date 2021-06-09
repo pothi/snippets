@@ -154,7 +154,7 @@ cd - 1> /dev/null
 # backup the installed version and switch to new version
 [ -s ${PMADIR}/config.inc.php ] && cp ${PMADIR}/config.inc.php ~/backups/
 
-cp -a $PMADIR $PMAOLD
+cp -a $PMADIR $PMAOLD 2> /dev/null
 
 [ -d $PMADIR ] && rm -rf $PMADIR/*
 
@@ -178,7 +178,7 @@ if [ -s ~/backups/config.inc.php ]; then
         exit 1
     fi
 
-    [ -d ${PMAOLD}/tmp ] && cp -a ${PMAOLD}/tmp ${PMADIR}/
+    [ -d ${PMAOLD}/tmp ] && cp -a ${PMAOLD}/tmp ${PMADIR}/ 2> /dev/null
     if [ "$?" != '0' ]; then
         echo '[Warn] Something wrent wrong, while copying the tmp directory back to PMADIR!'
     fi
