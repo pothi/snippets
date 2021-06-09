@@ -60,7 +60,7 @@ if [ ! -d "$LOGDIR" ] && [ ! "$(mkdir -p $LOGDIR)" ]; then
     exit 1
 fi
 
-[ ! -d ~/backups ] && mkdir ~/backups
+if [ ! -d "~/backups" ] && [ ! "$(mkdir ~/backups)" ]; then
 if [ "$?" != "0" ]; then
     echo; echo "Backup directory doesn't exist. Please create it manually and re-run this script."; echo
     send_email
