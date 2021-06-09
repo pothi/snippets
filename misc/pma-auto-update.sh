@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# version: 2.1
+# version: 2.2
 # date: 2021-06-09
 
 # raw url: https://github.com/pothi/linux-bootstrap-snippets/raw/master/pma-auto-update.sh
@@ -45,7 +45,7 @@ TEMP_FILE='/tmp/pma-version.html'
 PMAOLD=/tmp/old-pma
 randomBlowfishSecret=`openssl rand -base64 32`
 
-source ~/.envrc &> /dev/null
+[ -f ~/.envrc ] && source ~/.envrc
 
 if [ -z "$pma_db_user" ]; then
     send_email
@@ -54,10 +54,15 @@ if [ -z "$pma_db_user" ]; then
 fi
 
 ## check for all directories
-if [ ! -d "$LOGDIR" ]; then
-    echo
-    echo "Log directory doesn't exist. Please modify the script and re-run."
-    echo
+if [ ! -d "$LOGDIR" ] && [ ! "$(mkdir -p $LOGDIR)" ]; then
+    echo; echo "Log directory doesn't exist. Please modify the script and re-run."; echo
+    send_email
+    exit 1
+fi
+
+[ ! -d ~/backups ] && mkdir ~/backups
+if [ "$?" != "0" ]; then
+    echo; echo "Backup directory doesn't exist. Please create it manually and re-run this script."; echo
     send_email
     exit 1
 fi
@@ -81,8 +86,8 @@ if [ "$NEW_VERSION" == '' ]; then
 fi
 
 # remove old temp files if exist
-rm -rf $PMAOLD &> /dev/null
-rm $TEMP_FILE &> /dev/null
+[ -d $PMAOLD ] && rm -rf $PMAOLD
+[ -f $TEMPFILE ] && rm $TEMP_FILE
 
 echo
 
@@ -144,43 +149,38 @@ if [ "$?" != '0' ]; then
     exit 1
 fi
 
-cd - &> /dev/null
+cd - 1> /dev/null
 
 # backup the installed version and switch to new version
-if [ -s ${PMADIR}/config.inc.php ] ; then
-    cp ${PMADIR}/config.inc.php ~/
-fi
+[ -s ${PMADIR}/config.inc.php ] && cp ${PMADIR}/config.inc.php ~/backups/
 
-cp -a $PMADIR $PMAOLD &> /dev/null
+cp -a $PMADIR $PMAOLD
 
-rm -rf $PMADIR/* &> /dev/null
+[ -d $PMADIR ] && rm -rf $PMADIR/*
 
-mkdir $PMADIR &> /dev/null
+mkdir $PMADIR
 
 cp -a /tmp/phpMyAdmin-${version}-english/* $PMADIR/
-
 if [ "$?" != '0' ]; then
-    echo 'Something wrent wrong, while moving directories!'
+    echo 'Something wrent wrong, while copying newer version to PMADIR!'
     send_email
     exit 1
 fi
 
 # security - https://docs.phpmyadmin.net/en/latest/setup.html#securing-your-phpmyadmin-installation
-rm -r ${PMADIR}/setup
+[ -d ${PMADIR}/setup ] && rm -r ${PMADIR}/setup
 
-if [ -s ~/config.inc.php ]; then
-    cp ~/config.inc.php ${PMADIR}/
+if [ -s ~/backups/config.inc.php ]; then
+    cp ~/backups/config.inc.php ${PMADIR}/
     if [ "$?" != '0' ]; then
         echo 'Something wrent wrong, while copying the config file!'
         send_email
         exit 1
     fi
 
-    [ -d ${PMAOLD}/tmp ] && mv ${PMAOLD}/tmp ${PMADIR}/
+    [ -d ${PMAOLD}/tmp ] && cp -a ${PMAOLD}/tmp ${PMADIR}/
     if [ "$?" != '0' ]; then
-        echo 'Something wrent wrong, while moving the tmp directory!'
-        send_email
-        exit 1
+        echo '[Warn] Something wrent wrong, while copying the tmp directory back to PMADIR!'
     fi
 else
     echo 'Creating a new config.inc.php file...'
@@ -209,9 +209,9 @@ else
 fi
 
 # remove old files and phpinfo.php file
-rm -rf $PMAOLD &> /dev/null
-rm $TEMP_FILE &> /dev/null
-rm ${PMADIR}/phpinfo.php &> /dev/null
+[ -d $PMAOLD ] && rm -rf $PMAOLD
+[ -f $TEMP_FILE ] && rm $TEMP_FILE
+[ -f ${PMADIR}/phpinfo.php ] && rm ${PMADIR}/phpinfo.php
 
 echo 'Done upgrading PhpMyadmin...'
 echo
