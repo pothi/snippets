@@ -19,6 +19,7 @@
 
 LOGDIR=$HOME/log
 LOG_FILE=$LOGDIR/phpmyadmin-updates.log
+# script output to log file (and to console)
 exec > >(tee -a ${LOG_FILE} )
 exec 2> >(tee -a ${LOG_FILE} >&2)
 
