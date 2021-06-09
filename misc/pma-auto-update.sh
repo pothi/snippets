@@ -42,7 +42,7 @@ function send_email() {
 }
 
 TEMP_FILE='/tmp/pma-version.html'
-PMAOLD=/tmp/old-pma
+# PMAOLD=/tmp/old-pma
 randomBlowfishSecret=`openssl rand -base64 32`
 
 [ -f ~/.envrc ] && source ~/.envrc
@@ -87,7 +87,7 @@ if [ "$NEW_VERSION" == '' ]; then
 fi
 
 # remove old temp files if exist
-[ -d $PMAOLD ] && rm -rf $PMAOLD
+# [ -d $PMAOLD ] && rm -rf $PMAOLD
 [ -f $TEMPFILE ] && rm $TEMP_FILE
 
 echo
@@ -124,14 +124,13 @@ fi
 
 if [ ! -d "$PMADIR" ]; then
     echo 'Setting up a new PhpMyAdmin installation...'
-    mkdir -p $PMADIR &> /dev/null
+    mkdir $PMADIR
     if [ "$?" != '0' ]; then
-        echo 'Something wrent wrong while creating new directory at '${PMADIR}
+        echo "Something wrent wrong while creating new directory at '${PMADIR}'"
         send_email
         exit 1
     fi
 fi
-
 
 # wget --no-check-certificate -q https://files.phpmyadmin.net/phpMyAdmin/${version}/phpMyAdmin-${version}-english.tar.gz -O /tmp/phpmyadmin-current-version.tar.gz
 \curl -sLo /tmp/phpmyadmin-current-version.tar.gz https://files.phpmyadmin.net/phpMyAdmin/${version}/phpMyAdmin-${version}-english.tar.gz
@@ -155,11 +154,13 @@ cd - 1> /dev/null
 # backup the installed version and switch to new version
 [ -s ${PMADIR}/config.inc.php ] && cp ${PMADIR}/config.inc.php ~/backups/
 
-cp -a $PMADIR $PMAOLD 2> /dev/null
+# cp -a $PMADIR $PMAOLD 2> /dev/null
 
-[ -d $PMADIR ] && rm -rf $PMADIR/*
-
-mkdir $PMADIR
+if [ -d $PMADIR ]; then
+    rm -rf $PMADIR/*
+else
+    mkdir $PMADIR
+fi
 
 cp -a /tmp/phpMyAdmin-${version}-english/* $PMADIR/
 if [ "$?" != '0' ]; then
@@ -179,10 +180,10 @@ if [ -s ~/backups/config.inc.php ]; then
         exit 1
     fi
 
-    [ -d ${PMAOLD}/tmp ] && cp -a ${PMAOLD}/tmp ${PMADIR}/ 2> /dev/null
-    if [ "$?" != '0' ]; then
-        echo '[Warn] Something wrent wrong, while copying the tmp directory back to PMADIR!'
-    fi
+    # [ -d ${PMAOLD}/tmp ] && cp -a ${PMAOLD}/tmp ${PMADIR}/ 2> /dev/null
+    # if [ "$?" != '0' ]; then
+        # echo '[Warn] Something wrent wrong, while copying the tmp directory back to PMADIR!'
+    # fi
 else
     echo 'Creating a new config.inc.php file...'
 
@@ -207,12 +208,14 @@ else
 
     # Hide unnecessary databases
     # sed -i "$ a\$cfg['Servers'][\$i]['hide_db'] = '^information_schema|performance_schema|mysql|phpmyadmin\$';" ${PMADIR}/config.inc.php
+    sed -i "$ a\$cfg['TempDir'] = '/tmp/';" ${PMADIR}/config.inc.php
 fi
 
 # remove old files and phpinfo.php file
-[ -d $PMAOLD ] && rm -rf $PMAOLD
+# [ -d $PMAOLD ] && rm -rf $PMAOLD
 [ -f $TEMP_FILE ] && rm $TEMP_FILE
 [ -f ${PMADIR}/phpinfo.php ] && rm ${PMADIR}/phpinfo.php
+[ -d /tmp/phpMyAdmin-${version}-english/ ] && rm -rf /tmp/phpMyAdmin-${version}-english/
 
 echo 'Done upgrading PhpMyadmin...'
 echo
