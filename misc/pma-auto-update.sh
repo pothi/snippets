@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# version: 2.0
-# date: 2021-04-30
+# version: 2.1
+# date: 2021-06-09
 
 # raw url: https://github.com/pothi/linux-bootstrap-snippets/raw/master/pma-auto-update.sh
 
@@ -175,7 +175,7 @@ if [ -s ~/config.inc.php ]; then
         exit 1
     fi
 
-    [ -d ${PMA_OLD}/tmp ] && mv ${PMA_OLD}/tmp ${PMADIR}/
+    [ -d ${PMAOLD}/tmp ] && mv ${PMAOLD}/tmp ${PMADIR}/
     if [ "$?" != '0' ]; then
         echo 'Something wrent wrong, while moving the tmp directory!'
         send_email
