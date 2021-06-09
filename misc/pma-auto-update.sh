@@ -54,14 +54,15 @@ if [ -z "$pma_db_user" ]; then
 fi
 
 ## check for all directories
-if [ ! -d "$LOGDIR" ] && [ ! "$(mkdir -p $LOGDIR)" ]; then
+[ ! -d ~/log ] && mkdir ~/log
+if [ ! -d ~/log ]; then
     echo; echo "Log directory doesn't exist. Please modify the script and re-run."; echo
     send_email
     exit 1
 fi
 
-if [ ! -d "~/backups" ] && [ ! "$(mkdir ~/backups)" ]; then
-if [ "$?" != "0" ]; then
+[ ! -d ~/backups ] && mkidr ~/backups
+if [ ! -d ~/backups ]; then
     echo; echo "Backup directory doesn't exist. Please create it manually and re-run this script."; echo
     send_email
     exit 1
