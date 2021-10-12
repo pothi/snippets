@@ -1,5 +1,6 @@
 
 " set this in $HOME/.vimrc or directly in $HOME/.vim/vimrc
+" recommended method is to copy it to ~/.vim/ folder.
 
 " -----------------------------------------------------------------------------------------------
 
@@ -7,12 +8,7 @@
 syntax on
 
 " -----------------------------------------------------------------------------------------------
-
-" indentation - purely with hard tabs
-set tabstop=4
-set shiftwidth=4
-" set noexpandtab
-" tip - :%retab! to convert spaces to tabs
+"  Tabs or Spaces "
 
 " while editing content for Github - purely without hard tabs
 " ref: http://vim.wikia.com/wiki/Indenting_source_code
@@ -20,8 +16,17 @@ set expandtab
 set softtabstop=4
 " :%retab to replace existing tabs to spaces
 
-" https://stackoverflow.com/a/159066/1004587
-autocmd FileType html setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab
+" automatically convert tabs into space upon writing into a file
+autocmd BufWrite * :retab
+
+" -----------------------------------------------------------------------------------------------
+"*** Indentation ***"
+
+" indentation - purely with hard tabs
+set tabstop=4
+set shiftwidth=4
+" set noexpandtab
+" tip - :%retab! to convert spaces to tabs
 
 " indentation
 set autoindent
@@ -29,11 +34,6 @@ set smartindent
 if has("autocmd")
     filetype plugin indent on
 endif
-
-autocmd FileType html :setlocal sw=2 ts=2 sts=2 expandtab " Two spaces for HTML files "
-
-" automatically convert tabs into space upon writing into a file
-autocmd BufWrite * :retab
 
 " for pasting indented text
 nnoremap <F2> :set invpaste paste?<CR>
@@ -71,6 +71,8 @@ set updatecount=0 " no swap file creation
 
 " -----------------------------------------------------------------------------------------------
 
+" Find unnecessary spaces and tabs
+
 " listchars
 " set list lcs=trail:·,tab:»·
 
@@ -79,18 +81,9 @@ set listchars=tab:<->,trail:%,nbsp:.,eol:$
 
 " -----------------------------------------------------------------------------------------------
 
-" For CentOS and its derivatives
-set nohls
-
-" -----------------------------------------------------------------------------------------------
-
-" PATH to 'find' faster
-set path+=.,/etc/varnish/,/etc/nginx/,/etc/httpd24/
-
-" -----------------------------------------------------------------------------------------------
-
 " Plugin Loader - Vim Plug - https://github.com/junegunn/vim-plug
 " Automatic installation - https://github.com/junegunn/vim-plug/wiki/faq#automatic-installation
+" Also see: https://github.com/junegunn/vim-plug/wiki/tutorial#setting-up
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -99,11 +92,13 @@ endif
 
 " plugins
 " for local user 
+" Ref: https://github.com/junegunn/vim-plug/wiki/tutorial#installing-plugins
 call plug#begin('~/.vim/plugged')
 
-Plug 'https://github.com/timakro/vim-searchant.git'
-Plug 'https://github.com/jiangmiao/auto-pairs'
-Plug 'https://github.com/mattn/emmet-vim'
+" Plug 'https://github.com/timakro/vim-searchant.git'
+Plug 'qxxxb/vim-searchhi'
+Plug 'jiangmiao/auto-pairs'
+Plug 'mattn/emmet-vim'
 
 call plug#end()
 
@@ -116,8 +111,10 @@ autocmd VimEnter *
 " -----------------------------------------------------------------------------------------------
 "  Plugin specific settings
 
-" SearchAnt plugin settings
-highlight SearchCurrent ctermbg=lightblue
+" SearchHi plugin settings
+" https://github.com/qxxxb/vim-searchhi#highlight-style
+highlight CurrentSearch ctermfg=108 ctermbg=235 cterm=reverse,bold
+# highlight CurrentSearch ctermbg=lightblue cterm=bold
 
 " -----------------------------------------------------------------------------------------------
 
@@ -145,6 +142,18 @@ set autowrite " Automatically :write before running commands
 set nojoinspaces
 
 " -----------------------------------------------------------------------------------------------
+
+" PATH to 'find' faster
+set path+=.,/etc/varnish/,/etc/nginx/,/etc/httpd24/
+
+" -----------------------------------------------------------------------------------------------
+
+" Tweaks for specific file types
+
+" https://stackoverflow.com/a/159066/1004587
+# autocmd FileType html setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab
+" Two spaces for HTML files "
+autocmd FileType html :setlocal sw=2 ts=2 sts=2 expandtab
 
 " file detection for nginx
 " ref: http://www.vim.org/scripts/script.php?script_id=1886
