@@ -114,7 +114,7 @@ autocmd VimEnter *
 " SearchHi plugin settings
 " https://github.com/qxxxb/vim-searchhi#highlight-style
 highlight CurrentSearch ctermfg=108 ctermbg=235 cterm=reverse,bold
-# highlight CurrentSearch ctermbg=lightblue cterm=bold
+" highlight CurrentSearch ctermbg=lightblue cterm=bold
 
 " -----------------------------------------------------------------------------------------------
 
@@ -151,7 +151,7 @@ set path+=.,/etc/varnish/,/etc/nginx/,/etc/httpd24/
 " Tweaks for specific file types
 
 " https://stackoverflow.com/a/159066/1004587
-# autocmd FileType html setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab
+" autocmd FileType html setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 " Two spaces for HTML files "
 autocmd FileType html :setlocal sw=2 ts=2 sts=2 expandtab
 
