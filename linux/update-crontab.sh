@@ -37,10 +37,13 @@ fi
 cd $gitdir
 echo "Pulling changes..."
 git pull --quiet
+
 cp $current_cron $gitdir/$cron_user
 git commit -am "Auto commit for $cron_user by $0" --quiet
-echo "Pushing changes..."
-git push --quiet
+if [ $? -eq 0 ]; then
+    echo "Pushing changes..."
+    git push --quiet
+fi
 
 rm $current_cron
 
