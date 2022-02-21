@@ -1,7 +1,11 @@
 #!/bin/bash
 
-# version: 2.2
-# date: 2021-06-09
+# version: 2.3
+# date: 2022-02-21
+
+# Changelog
+# 2.3:
+#   - fix the error while finding the latest version
 
 # raw url: https://raw.githubusercontent.com/pothi/snippets/main/misc/pma-auto-update.sh
 
@@ -78,8 +82,7 @@ if [ "$?" != '0' ]; then
     exit 1
 fi
 
-NEW_VERSION=$( grep -o 'Download [0-9].[0-9].[0-9]' $TEMP_FILE | awk '{print $2}' )
-# NEW_VERSION=$( grep -w '<h2>phpMyAdmin' $TEMP_FILE | head -1 | awk '{print $2}' | awk -F'<' '{print $1}' )
+NEW_VERSION=$( grep -o 'Download [0-9].[0-9].[0-9]' $TEMP_FILE | awk '{print $2}' | head -1 )
 if [ "$NEW_VERSION" == '' ]; then
     echo 'Something wrong in identifying the new version'
     send_email
