@@ -41,13 +41,14 @@ cd $gitdir
 echo "Pulling changes..."
 git pull --quiet
 
-if [ -f $gitdir/$cron_user ]; then
-    cp $current_cron $gitdir/$cron_user
-else
-    cp $current_cron $gitdir/$cron_user
-    git add $gitdir/$cron_user
+if [ ! -f $gitdir/$cron_user ]; then
+    echo "You seem to be run this script for the first time."
+    echo "Please execute 'git add .' manually."
+    echo "And then, re-run this script."
+    echo "This is to avoid situations where file name is not generated correctly."
 fi
 
+cp $current_cron $gitdir/$cron_user
 git commit -am "Auto commit for $cron_user by $0" --quiet
 if [ $? -eq 0 ]; then
     echo "Pushing changes..."

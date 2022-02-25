@@ -14,13 +14,13 @@ echo "Date / Time: $(date +%c)"
 inet=
 
 while [ -z $inet ]; do
-    wget -q --spider http://g.co
+    \curl -s --connect-timeout 3 -o /dev/null http://1.1.1.1
 
     if [ $? -eq 0 ]; then
         inet="Online"
     else
         echo "Waiting for internet..."
-        sleep 3
+        # sleep 3
     fi
 done
 
