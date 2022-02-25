@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# version 1.1
+# changelog
+# 1.1:
+#   - date: 2022-01-07
+#   - use \dig and \curl to avoid conflicts with local aliases
+
+# benchmark of all methods
+# https://unix.stackexchange.com/a/194136/20241
+
+# ipv4
+# curl http://whatismyip.akamai.com && echo
+
+# ipv6
+# curl http://ipv6.whatismyip.akamai.com && echo
+
+# other methods
+# dig +short myip.opendns.com @resolver1.opendns.com
+
+# get external IP address
+# used for outgoing Internet connections
+# see: https://github.com/rsp/scripts/blob/master/externalip.md
+
+case "$1" in
+    ""|dns) \dig +short myip.opendns.com @resolver1.opendns.com ;;
+    http) \curl -s http://whatismyip.akamai.com/ && echo ;;
+    https) \curl -s https://4.ifcfg.me/ ;;
+    ftp) echo close | ftp 4.ifcfg.me | awk '{print $4; exit}' ;;
+    telnet) nc 4.ifcfg.me 23 | grep IPv4 | cut -d' ' -f4 ;;
+    *) echo Bad argument >&2 && exit 1 ;;
+esac
