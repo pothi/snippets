@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
-# version 1.1
+# version 1.2
 # changelog
+# 1.2:
+#   - date: 2022-02-25
+#   - find and display ipv6 address, if exists
 # 1.1:
 #   - date: 2022-01-07
 #   - use \dig and \curl to avoid conflicts with local aliases
@@ -22,11 +25,19 @@
 # used for outgoing Internet connections
 # see: https://github.com/rsp/scripts/blob/master/externalip.md
 
+myipv6=$( \curl -sL http://ipv6.whatismyip.akamai.com )
+if [ ! -z $myipv6 ]; then
+    echo $myipv6
+fi
+
+myip=
 case "$1" in
-    ""|dns) \dig +short myip.opendns.com @resolver1.opendns.com ;;
+    ""|dns) myip=$(\dig +short myip.opendns.com @resolver1.opendns.com) ;;
     http) \curl -s http://whatismyip.akamai.com/ && echo ;;
     https) \curl -s https://4.ifcfg.me/ ;;
     ftp) echo close | ftp 4.ifcfg.me | awk '{print $4; exit}' ;;
     telnet) nc 4.ifcfg.me 23 | grep IPv4 | cut -d' ' -f4 ;;
     *) echo Bad argument >&2 && exit 1 ;;
 esac
+
+echo "$myip"

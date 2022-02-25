@@ -1,8 +1,11 @@
 #!/bin/bash
 
-# version 2.0
+# version 2.1
 # changelog
-# version 2.0
+# 2.1
+#   - date: 2022-02-25
+#   - minor tweaks
+# 2.0
 #   - date: 2021-05-06
 #   - migrate to AWS CC
 
@@ -38,7 +41,13 @@ cd $gitdir
 echo "Pulling changes..."
 git pull --quiet
 
-cp $current_cron $gitdir/$cron_user
+if [ -f $gitdir/$cron_user ]; then
+    cp $current_cron $gitdir/$cron_user
+else
+    cp $current_cron $gitdir/$cron_user
+    git add $gitdir/$cron_user
+fi
+
 git commit -am "Auto commit for $cron_user by $0" --quiet
 if [ $? -eq 0 ]; then
     echo "Pushing changes..."
