@@ -20,7 +20,7 @@ while [ -z $inet ]; do
         inet="Online"
     else
         echo "Waiting for internet..."
-        # sleep 3
+        sleep 2
     fi
 done
 
