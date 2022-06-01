@@ -1,8 +1,11 @@
 #!/bin/bash
 
 # requirements: webp (sudo apt install webp or yum install webp)
-# version 1.3
+# version 1.4
 
+# version: 1.4
+#   - date: 2022-06-01
+#   - check for webp executive
 # version 1.3
 #   - date: 2020-05-28
 #   - change the logic litte bit to make the output less noisy
@@ -25,6 +28,8 @@ sleep_time=1
 if [ "$1" == "" ]; then
     echo "Usage $0 directory to process"
 fi
+
+[ ! -f /usr/bin/cwebp ] && echo "Couldn't find webp executive. Please install using 'sudo apt/yum install webp'." && exit 1
 
 files=$(find $1 -type f -size +10k -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg')
 
