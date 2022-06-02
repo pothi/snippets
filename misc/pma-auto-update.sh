@@ -144,15 +144,12 @@ if [ "$?" != '0' ]; then
 fi
 echo 'Done downloading'
 
-cd /tmp/
-tar xzf /tmp/phpmyadmin-current-version.tar.gz && rm /tmp/phpmyadmin-current-version.tar.gz
+tar xzf /tmp/phpmyadmin-current-version.tar.gz -C /tmp/ && rm /tmp/phpmyadmin-current-version.tar.gz
 if [ "$?" != '0' ]; then
     echo 'Something wrent wrong, while extracting the archive!'
     send_email
     exit 1
 fi
-
-cd - 1> /dev/null
 
 # backup the installed version and switch to new version
 [ -s ${PMADIR}/config.inc.php ] && cp ${PMADIR}/config.inc.php ~/backups/
