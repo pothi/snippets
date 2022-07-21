@@ -3,6 +3,7 @@
 # version: 2022.07.21
 #   - fix an issue where php-package_name is installed by default irrespective of supplied PHP version.
 #   - take a backup of /etc
+#   - install php-intl package (ex: for Jan)
 # version: 2022.06.19
 #   - support for php 8
 # version: 2020.10.28
@@ -80,6 +81,7 @@ php_packages="php${php_ver}-fpm \
     php${php_ver}-curl \
     php${php_ver}-zip \
     php${php_ver}-bcmath \
+    php${php_ver}-intl
     php${php_ver}-imagick"
 
 for package in $php_packages
