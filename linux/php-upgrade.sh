@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# version: 2022.07.21
+#   - fix an issue where php-package_name is installed by default irrespective of supplied PHP version.
+#   - take a backup of /etc
 # version: 2022.06.19
 #   - support for php 8
 # version: 2020.10.28
@@ -42,6 +45,17 @@ fi
 # php${php_ver}-mysqlnd package is not found in Ubuntu
 php_ver=8.1
 
+###------------------------- Please do not edit below this line -------------------------###
+
+# take a backup
+backup_dir="/root/backups/etc-before-${php_ver}-$(date +%F)"
+if [ ! -d "$backup_dir" ]; then
+    printf '%-72s' "Taking initial backup..."
+    mkdir -p $backup_dir
+    cp -a /etc $backup_dir
+    echo done.
+fi
+
 # create log directory, if it doesn't exist
 [ ! -d /root/log ] && mkdir /root/log
 
@@ -54,8 +68,6 @@ echo "Log file can be found at /root/log/php${php_ver}-install.log"
 sudo apt-get install software-properties-common
 sudo add-apt-repository --update ppa:ondrej/php -y
 # sudo apt-get update
-
-###------------------------- Please do not edit below this line -------------------------###
 
 # if you wish to configure the PHP version, please see above
 php_packages="php${php_ver}-fpm \
