@@ -57,7 +57,7 @@ sudo add-apt-repository --update ppa:ondrej/php -y
 
 ###------------------------- Please do not edit below this line -------------------------###
 
-php_ver=8.1
+# if you wish to configure the PHP version, please see above
 php_packages="php${php_ver}-fpm \
     php${php_ver}-mysql \
     php${php_ver}-gd \
@@ -78,17 +78,17 @@ do
         :
     else
         # Remove ${php_ver} from package name to find if php-package is installed.
-        package=$(printf '%s' "$package" | sed 's/[.0-9]*//g')
-        if dpkg-query -W -f='${Status}' $package 2>/dev/null | grep -q "ok installed"
-        then
-            # echo "'$package' is already installed"
-            :
-        else
+        # php_package=$(printf '%s' "$package" | sed 's/[.0-9]*//g')
+        # if dpkg-query -W -f='${Status}' $php_package 2>/dev/null | grep -q "ok installed"
+        # then
+            # echo "'$php_package' is already installed"
+            # :
+        # else
             printf '%-72s' "Installing '${package}' ..."
             apt-get -qq install $package &> /dev/null
             check_result $? "Error installing ${package}."
             echo done.
-        fi
+        # fi
     fi
 done
 
