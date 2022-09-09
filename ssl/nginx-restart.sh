@@ -2,6 +2,9 @@
 
 # nginx restart script for certbot
 
+# put it in /etc/letsencrypt/renewal-hooks/deploy/
+# make it executable (chmod +x)
+
 # version 1.0
 # date: 2021-04-22
 
