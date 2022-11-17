@@ -91,18 +91,10 @@ do
         # echo "'$package' is already installed"
         :
     else
-        # Remove ${php_ver} from package name to find if php-package is installed.
-        # php_package=$(printf '%s' "$package" | sed 's/[.0-9]*//g')
-        # if dpkg-query -W -f='${Status}' $php_package 2>/dev/null | grep -q "ok installed"
-        # then
-            # echo "'$php_package' is already installed"
-            # :
-        # else
-            printf '%-72s' "Installing '${package}' ..."
-            apt-get -qq install $package &> /dev/null
-            check_result $? "Error installing ${package}."
-            echo done.
-        # fi
+        printf '%-72s' "Installing '${package}' ..."
+        apt-get -qq install $package &> /dev/null
+        check_result $? "Error installing ${package}."
+        echo done.
     fi
 done
 
