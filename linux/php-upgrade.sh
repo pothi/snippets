@@ -183,7 +183,7 @@ sed -i "/^listen =/ s:=.*:= $socket:" $pool_file
 # [ -f /etc/nginx/conf.d/lb.conf ] && sed -i "s:/var/lock/php-fpm.*;:$socket;:" /etc/nginx/conf.d/lb.conf
 if [ ! -f /etc/nginx/conf.d/fpm${php_ver_short}.conf ]; then
     echo "upstream fpm${php_ver_short} { server unix:$socket; }" > /etc/nginx/conf.d/fpm${php_ver_short}.conf
-    # following is applicable only on new servers, not during PHP upgrade.
+    # following is applicable only on new servers, not during PHP upgrade. it can delete the existing config file/s.
     # echo "upstream fpm { server unix:$socket; }" > /etc/nginx/conf.d/fpm.conf
     # [ -f /etc/nginx/conf.d/lb.conf ] && rm /etc/nginx/conf.d/lb.conf
 fi

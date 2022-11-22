@@ -3,7 +3,7 @@
 #--- prerequisites ---#
 # doctl
 # DO_PK_FIREWALL_ID env var in ~/.envrc file
-# myip script
+# myip script installed in PATH - https://github.com/pothi/snippets/blob/main/mac/myip
 
 [ -f ~/.envrc ] && . ~/.envrc
 
