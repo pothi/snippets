@@ -64,7 +64,7 @@ export HISTIGNORE='&':'[ ]*':cd:'cd .*':ls:ps:top:w
 ### ------------------------------ PATHS ------------------------------ ###
 
 # Example for how to add to PATH
-# [ -d $GEM_PATH ] && PATH=$GEM_PATH:$PATH
-# [ -d "$HOME/.composer/vendor/bin" ] && PATH="$HOME/.composer/vendor/bin:$PATH"
+[ -d $GEM_PATH ] && PATH=$GEM_PATH:$PATH
+[ -d "$HOME/.composer/vendor/bin" ] && PATH="$HOME/.composer/vendor/bin:$PATH"
 
 ### --------------------------------------------------------------------- ###
