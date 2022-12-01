@@ -2,15 +2,24 @@
 
 # nginx restart script for certbot
 
+# version: 1.1
+
 # put it in /etc/letsencrypt/renewal-hooks/deploy/
 # make it executable (chmod +x)
 
-# version 1.0
-# date: 2021-04-22
+# version: 1.1
+#   - date: 2022-12-1
+#   - try to get CERTBOT_ADMIN_EMAIL from ~/.env(rc)
+# version: 1.0
+#   - date: 2021-04-22
 
 # programming env: these switches turn some bugs into errors
 # set -o errexit -o pipefail -o noclobber -o nounset
 # set -x
+
+# get environment variables, if exists
+[ -f "$HOME/.envrc" ] && source ~/.envrc
+[ -f "$HOME/.env" ] && source ~/.env
 
 certbot_admin_email=${CERTBOT_ADMIN_EMAIL:-root@localhost}
 ssl_utility=/root/scripts/ssl-cert-check
