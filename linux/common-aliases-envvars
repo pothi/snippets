@@ -36,6 +36,8 @@ alias grep='\grep --color=auto'
 
 alias pwgen='\pwgen -cnsyBv'
 
+alias showpath="printf '%s\n' \"$PATH\" | tr ':' '\n'"
+
 ### ------------------------------ Env Vars ------------------------------ ###
 
 # for grep to output with colors
