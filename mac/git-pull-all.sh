@@ -1,6 +1,14 @@
 #!/bin/bash
 
+# programming env: these switches turn some bugs into errors
+set -o errexit -o pipefail -o noclobber -o nounset
+
 # set -x
+
+# to capture non-zero exit code in the pipeline
+set -o pipefail
+
+export PATH=~/bin:~/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
 
 [ ! -d ~/log ] && mkdir ~/log
 log_file=~/log/git-pull-all.log
@@ -26,8 +34,11 @@ while [ -z $inet ]; do
 done
 
 echo 'Internet is up!'
-echo "Running 'git pull' on all directories inside ~/git/ ..."
 
+echo 'Running git pull ~/.ssh ...'
+git -C ~/.ssh pull -q
+
+echo "Running 'git pull' on all directories inside ~/git/ ..."
 for d in ~/git/*/; do
     echo; echo "Current dir: $d"
     git -C $d pull -q
