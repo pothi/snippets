@@ -1,14 +1,20 @@
 #!/bin/bash
 
 # programming env: these switches turn some bugs into errors
-set -o errexit -o pipefail -o noclobber -o nounset
+set -o errexit
+# to capture non-zero exit code in the pipeline
+set -o pipefail
+# to avoid deleting existing file accidentally
+# set -o noclobber
+# to avoid using unset variable
+set -o nounset
 
 # set -x
 
-# to capture non-zero exit code in the pipeline
-set -o pipefail
-
 export PATH=~/bin:~/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+
+# PATH for wget on macOS
+[ -d /opt/local/bin ] && PATH=/opt/local/bin:$PATH
 
 [ ! -d ~/log ] && mkdir ~/log
 log_file=~/log/git-pull-all.log
