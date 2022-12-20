@@ -9,7 +9,7 @@ set -o pipefail
 # to avoid using unset variable
 set -o nounset
 
-set -x
+# set -x
 
 export PATH=~/bin:~/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
 
@@ -41,9 +41,8 @@ while [ -z $inet ]; do
     fi
 done
 
-echo 'Internet is up!'
-
-exit
+# echo 'Internet is up!'
+# exit
 
 echo 'Running git pull ~/.ssh ...'
 git -C ~/.ssh pull -q
