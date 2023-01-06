@@ -48,9 +48,9 @@ echo 'Running git pull ~/.ssh ...'
 git -C ~/.ssh pull -q
 
 echo "Running 'git pull' on all directories inside ~/git/ ..."
-for d in ~/git/*/; do
-    echo; echo "Current dir: $d"
-    git -C $d pull -q
+for repo in ~/git/*/; do
+    echo; echo "Current dir: $repo"
+    git -C $repo pull -q
 done
 
 echo 'Done.'
