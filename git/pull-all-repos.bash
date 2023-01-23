@@ -44,7 +44,7 @@ done
 # echo 'Internet is up!'
 # exit
 
-echo 'Running git pull ~/.ssh ...'
+echo 'Running git pull on ~/.ssh ...'
 git -C ~/.ssh pull -q
 
 echo "Running 'git pull' on all directories inside ~/git/ ..."
