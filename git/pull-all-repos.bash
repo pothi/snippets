@@ -49,8 +49,14 @@ git -C ~/.ssh pull -q
 
 echo "Running 'git pull' on all directories inside ~/git/ ..."
 for repo in ~/git/*/; do
-    echo; echo "Current dir: $repo"
-    git -C $repo pull -q
+    # skip local repos (with no remote origin url)
+    git -C $repo config remote.origin.url >/dev/null
+    if [ "$?" = "0" ]; then
+        echo "Current dir: $repo"
+        git -C $repo pull -q
+    else
+        echo "Skipped local repo: $repo"
+    fi
 done
 
 echo 'Done.'

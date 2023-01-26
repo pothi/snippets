@@ -38,7 +38,9 @@ alias grep='\grep --color=auto'
 
 alias pwgen='\pwgen -cnsyBv'
 
-alias showpath="printf '%s\n' \"$PATH\" | tr ':' '\n'"
+alias showpath='printf "%s\n" $PATH | tr : "\n"'
+
+alias apt-list-security-updates='\apt list --upgradable 2>/dev/null | grep security'
 
 ### ------------------------------ Env Vars ------------------------------ ###
 
