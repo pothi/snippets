@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+# TODO: display full changes on repos that have something modified.
 
 # programming env: these switches turn some bugs into errors
 # set -o errexit

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# TODO: Currently, arch (amd64) is hardcoded. Find it on-the-fly to make it compatible with other platforms.
+
 # Install or update DNSControl
 
 # Requirements: curl and jq
