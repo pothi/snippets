@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#TODO: if the remote.origin.url starts with https://, it is likely to be a read-only repo that can be skipped for changes.
+
 # programming env: these switches turn some bugs into errors
 # set -o errexit
 # to capture non-zero exit code in the pipeline
@@ -30,23 +32,24 @@ echo
 inet=
 sleep_for=3
 
-while [ -z $inet ]; do
+while [ ! "$inet" ]; do
     # \curl -s --connect-timeout 3 -o /dev/null http://1.1.1.1
-    \wget --spider -q http://g.co
+    cmd="wget --spider -q http://g.co"
 
-    if [ $? -eq 0 ]; then
+    if $cmd
+    then
         inet="Online"
     else
         echo "Waiting for internet..."
         sleep ${sleep_for}
-        [ $sleep_for -lt 60 ] && sleep_for=$((${sleep_for}*2))
+        [ $sleep_for -lt 60 ] && sleep_for=$((sleep_for*2))
     fi
 done
 
 # echo 'Internet is up!'
 # exit
 
-gitStatus==
+# gitStatus=
 
 gitStatus=$(git -C ~/.ssh status --short)
 if [ "$gitStatus" ] ; then
@@ -58,7 +61,7 @@ fi
 echo "Running 'git status' on all directories inside ~/git/ ..."
 echo
 for repo in ~/git/*/; do
-    gitStatus=$(git -C $repo status --short)
+    gitStatus=$(git -C "$repo" status --short)
     if [ "$gitStatus" ] ; then
         echo "Current dir: $repo"
         echo "$gitStatus"
