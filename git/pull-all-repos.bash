@@ -20,10 +20,11 @@ export PATH=~/bin:~/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
 
 [ ! -d ~/log ] && mkdir ~/log
 log_file=~/log/pull-all-repos.log
-exec > >(tee -a ${log_file} )
+exec > >(tee -a ${log_file})
 exec 2> >(tee -a ${log_file} >&2)
 
-echo; echo "Script: $0"
+echo
+echo "Script: $0"
 echo "Date / Time: $(date +%c)"
 
 # Test for internet
@@ -32,14 +33,14 @@ sleep_for=3
 
 while [ -z $inet ]; do
     # \curl -s --connect-timeout 3 -o /dev/null http://1.1.1.1
-    \wget --spider -q http://g.co
+    cmd="wget --spider -q http://g.co"
 
-    if [ $? -eq 0 ]; then
+    if $cmd; then
         inet="Online"
     else
         echo "Waiting for internet..."
         sleep ${sleep_for}
-        [ $sleep_for -lt 60 ] && sleep_for=$((${sleep_for}*2))
+        [ $sleep_for -lt 60 ] && sleep_for=$((sleep_for * 2))
     fi
 done
 
@@ -52,15 +53,13 @@ git -C ~/.ssh pull -q
 echo "Running 'git pull' on all directories inside ~/git/ ..."
 for repo in ~/git/*/; do
     # skip local repos (with no remote origin url)
-    git -C $repo config remote.origin.url >/dev/null
-    if [ "$?" = "0" ]; then
+    if git -C "$repo" config remote.origin.url >/dev/null; then
         echo "Current dir: $repo"
-        git -C $repo pull -q
+        git -C "$repo" pull -q
 
         # Pull changes in submodule/s
-        if [ -f ${repo}.gitmodules ]
-        then
-            git -C $repo submodule update --remote --merge
+        if [ -f "${repo}.gitmodules" ]; then
+            git -C "$repo" submodule update --remote --merge -q
         fi
     else
         echo "Skipped local repo: $repo"
