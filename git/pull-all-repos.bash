@@ -56,6 +56,10 @@ for repo in ~/git/*/; do
     if [ "$?" = "0" ]; then
         echo "Current dir: $repo"
         git -C $repo pull -q
+        if [ -f ${repo}/.gitmodules ]
+        then
+            git submodule update --remote --merge
+        fi
     else
         echo "Skipped local repo: $repo"
     fi
