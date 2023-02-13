@@ -13,7 +13,11 @@ set -o nounset
 
 # set -x
 
-export PATH=~/bin:~/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+export PATH=~/bin:~/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# OS specific PATH
+[ -d /snap/bin ] && PATH=$PATH:/snap/bin
+[ -d /opt/local/bin ] && PATH=$PATH:/opt/local/bin
+
 
 # PATH for wget on macOS
 [ -d /opt/local/bin ] && PATH=/opt/local/bin:$PATH

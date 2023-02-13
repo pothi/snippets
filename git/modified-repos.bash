@@ -13,15 +13,10 @@ set -o nounset
 
 # set -x
 
-export PATH=~/bin:~/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-
-# PATH for wget on macOS
-[ -d /opt/local/bin ] && PATH=/opt/local/bin:$PATH
-
-[ ! -d ~/log ] && mkdir ~/log
-log_file=~/log/pull-all-repos.log
-exec > >(tee -a ${log_file} )
-exec 2> >(tee -a ${log_file} >&2)
+export PATH=~/bin:~/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# OS specific PATH
+[ -d /snap/bin ] && PATH=$PATH:/snap/bin
+[ -d /opt/local/bin ] && PATH=$PATH:/opt/local/bin
 
 echo
 echo "Script: $0"
