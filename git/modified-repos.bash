@@ -15,7 +15,9 @@ set -o nounset
 
 export PATH=~/bin:~/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 # OS specific PATH
+# snap on Debian / Ubuntu
 [ -d /snap/bin ] && PATH=$PATH:/snap/bin
+# port on macOS
 [ -d /opt/local/bin ] && PATH=$PATH:/opt/local/bin
 
 echo
