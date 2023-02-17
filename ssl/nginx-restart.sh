@@ -2,11 +2,15 @@
 
 # nginx restart script for certbot
 
-# version: 1.1
+# version=2.0
 
 # put it in /etc/letsencrypt/renewal-hooks/deploy/
 # make it executable (chmod +x)
 
+# version: 2.0
+#   - date: 2023-02-17
+#   - include PATH
+#   - complete refactor with current best practices
 # version: 1.1
 #   - date: 2022-12-1
 #   - try to get CERTBOT_ADMIN_EMAIL from ~/.env(rc)
@@ -15,36 +19,39 @@
 
 # programming env: these switches turn some bugs into errors
 # set -o errexit -o pipefail -o noclobber -o nounset
+set -o pipefail
 # set -x
 
 # get environment variables, if exists
 [ -f "$HOME/.envrc" ] && source ~/.envrc
 [ -f "$HOME/.env" ] && source ~/.env
 
-certbot_admin_email=${CERTBOT_ADMIN_EMAIL:-root@localhost}
-ssl_utility=/root/scripts/ssl-cert-check
-config_live_subdir=${RENEWED_LINEAGE:-""}
-prev_expiry_date=
-next_expiry_date=
-certbot_domain=
+export PATH=~/bin:~/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
 
-[ ! -z "$config_live_subdir" ] && certbot_domain=$(basename "$config_live_subdir")
-
+# the shell variable $RENEWED_LINEAGE will point to the config live subdirectory
+# (for example, "/etc/letsencrypt/live/example.com") containing the new certs and
+# keys; the shell variable $RENEWED_DOMAINS will contain a space-delimited list
+# of renewed cert domains (for example, "example.com www.example.com").
 # https://community.letsencrypt.org/t/environment-variables-available-in-etc-letsencrypt-renewal-hooks-scripts/102036
+config_live_subdir=${RENEWED_LINEAGE:-""}
 
-[ ! -d /root/scripts ] && mkdir /root/scripts
-[ ! -f $ssl_utility ] && \curl -LsSo $ssl_utility https://github.com/Matty9191/ssl-cert-check/raw/master/ssl-cert-check
+certbot_domain=$(basename "$config_live_subdir")
+certbot_admin_email=${CERTBOT_ADMIN_EMAIL:-"root@localhost"}
+ssl_utility=/root/bin/ssl-cert-check
+old_expiry_date=
+new_expiry_date=
 
-chmod +x $ssl_utility
+old_expiry_date=$(echo | openssl s_client --servername ${certbot_domain} -connect ${certbot_domain}:443 2>/dev/null | openssl x509 -noout -dates | grep notAfter | awk -F= '{print $2}' | cut -d ' ' -f 1,2,4)
 
-[ ! -z "$certbot_domain" ] && prev_expiry_date=$($ssl_utility -s $certbot_domain -b | awk '{print $3, $4, $5}')
+if nginx -t 2>/dev/null; then
+    if ! systemctl restart nginx; then
+        echo >&2 "The command 'systemctl nginx restart' failed!!"
+    fi
+else
+    echo >&2 "The command 'nginx -t' failed!"
+fi
 
-$(which nginx) -t && $(which systemctl) restart nginx
+new_expiry_date=$(cat "${RENEWED_LINEAGE}/fullchain.pem" | openssl x509 -noout -dates | grep notAfter | awk -F= '{print $2}' | cut -d ' ' -f 1,2,4)
 
-[ ! -z "$certbot_domain" ] && next_expiry_date=$($ssl_utility -s $certbot_domain -b | awk '{print $3, $4, $5}')
-
-echo "Certificate for the domain '$certbot_domain' is renewed. \
-    The old expiry date was '$prev_expiry_date' and the new expiry date is '$next_expiry_date'. \
-    If you see a different expiry date, the renewal process went through successfully. \
-    If not, check the logs." | /usr/bin/mail -s "Renewal of $certbot_domain" $certbot_admin_email
-
+printf 'Certificate for the domain %s is renewed.\n\nThe old expiry date was %s.\nThe new expiry date is %s.\n\nIf you did not expect the above output, please check the logs at /var/log/letsencrypt/.\n' "$certbot_domain" "$old_expiry_date" "$new_expiry_date" \
+    | mail -s "Renewal of $certbot_domain" $certbot_admin_email
