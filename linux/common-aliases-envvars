@@ -42,6 +42,10 @@ alias showpath='printf "%s\n" $PATH | tr : "\n"'
 
 alias apt-list-security-updates='\apt list --upgradable 2>/dev/null | grep security'
 
+# -r[--rmlastnl] to ReMove LAST New Line
+alias pbcopy='xclip -rmlastnl -selection clipboard'
+alias pbcopy='xclip -r -sel c'
+
 ### ------------------------------ Env Vars ------------------------------ ###
 
 # for grep to output with colors
