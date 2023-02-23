@@ -1,0 +1,14 @@
+# Version 1.0
+# Keep it on ~/.config/systemd/user/
+
+[Unit]
+Description=Alert before automated reboot
+After=apt-daily.service
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/alert-auto-reboot.sh
+
+[Install]
+WantedBy=default.target
+
