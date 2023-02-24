@@ -25,8 +25,7 @@ log_file=~/log/pull-all-repos.log
 exec > >(tee -a ${log_file})
 exec 2> >(tee -a ${log_file} >&2)
 
-echo
-echo "Script: $0"
+echo -e "\nScript: $0"
 echo "Date / Time: $(date +%c)"
 
 # Test for internet
@@ -68,5 +67,4 @@ for repo in ~/git/*/; do
     fi
 done
 
-echo 'Done.'
-echo
+echo -e 'Done.\n'
