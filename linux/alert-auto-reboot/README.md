@@ -11,3 +11,21 @@ alert-auto-reboot.timer - is the actual timer that triggers alert-auto-reboot.se
 TODO:
 
 Automate deploying all the above three files through ansible or using a script.
+
+```
+
+[ -d ~/.config/systemd/user ] || mkdir -p ~/.config/systemd/user
+[ -d ~/.local/bin ] || mkdir -p ~/.local/bin
+cd ~/.config/systemd/user || exit 1
+wget https://github.com/pothi/snippets/raw/main/linux/alert-auto-reboot/alert-auto-reboot.service
+wget https://raw.githubusercontent.com/pothi/snippets/main/linux/alert-auto-reboot/alert-auto-reboot.timer
+cd ~/.local/bin || exit 1
+wget https://github.com/pothi/snippets/raw/main/linux/alert-auto-reboot/alert-auto-reboot.sh
+chmod +x alert-auto-reboot.sh
+
+systemctl --user enable alert-auto-reboot.timer
+systemctl --user start alert-auto-reboot.timer
+systemctl --user enable alert-auto-reboot.service
+systemctl --user start alert-auto-reboot.service
+
+```

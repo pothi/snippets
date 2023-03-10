@@ -1,6 +1,10 @@
 # Version 1.0
 # Keep it on ~/.config/systemd/user/
 
+# Run the following...
+# systemctl --user enable alert-auto-reboot.service
+# systemctl --user start alert-auto-reboot.service
+
 [Unit]
 Description=Alert before automated reboot
 After=apt-daily.service

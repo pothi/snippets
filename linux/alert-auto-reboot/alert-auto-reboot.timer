@@ -1,6 +1,10 @@
 # Version 1.0
 # Keep it on ~/.config/systemd/user/
 
+# Run the following...
+# systemctl --user enable alert-auto-reboot.timer
+# systemctl --user start alert-auto-reboot.timer
+
 [Unit]
 Description=Alert about automated reboots
 RefuseManualStart=no  # Allow manual starts
