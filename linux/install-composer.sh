@@ -28,7 +28,7 @@ if [ ! -f $install_dir/composer ]; then
     crontab -l &> /dev/null
     if [ "$?" -ne "0" ]; then
         # ( crontab -l; echo; echo "# auto-update composer - nightly" ) | crontab -
-        ( crontab -l; echo '@daily $install_dir/composer self-update &> /dev/null' ) | crontab -
+        ( crontab -l; echo "@daily $install_dir/composer self-update > /dev/null" ) | crontab -
     fi
 
 fi
