@@ -44,16 +44,20 @@ if [ -z "$web_developer_username" ]; then
 fi
 
 # php${php_ver}-mysqlnd package is not found in Ubuntu
-php_ver=8.1
+php_ver=8.2
+
+# to manage multiple PHP versions
+# update-alternatives –-config php
+# update-alternatives --set php /usr/bin/php8.1
 
 ###------------------------- Please do not edit below this line -------------------------###
 
 # take a backup
-backup_dir="/root/backups/etc-before-${php_ver}-$(date +%F)"
+backup_dir="/root/backups/etc-php-$(date +%F)"
 if [ ! -d "$backup_dir" ]; then
-    printf '%-72s' "Taking initial backup..."
+    printf '%-72s' "Taking a backup..."
     mkdir -p $backup_dir
-    cp -a /etc $backup_dir
+    cp -a /etc/php $backup_dir
     echo done.
 fi
 
@@ -67,7 +71,9 @@ exec 2> >(tee -a ${LOG_FILE} >&2)
 echo "Log file can be found at /root/log/php${php_ver}-install.log"
 
 sudo apt-get install software-properties-common
-sudo add-apt-repository --update ppa:ondrej/php -y
+if ! grep -q 'ondrej/php' /etc/apt/sources.list.d/*.list ; then
+    sudo add-apt-repository --update ppa:ondrej/php -y
+fi
 # sudo apt-get update
 
 # if you wish to configure the PHP version, please see above
