@@ -20,30 +20,8 @@ export PATH=~/bin:~/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
 # port on macOS
 [ -d /opt/local/bin ] && PATH=$PATH:/opt/local/bin
 
-echo
-echo "Script: $0"
-echo "Date & Time: $(date +%c)"
-echo
-
-# Test for internet
-isUP=
-sleep_for=3
-
-while [ ! "$isUP" ]; do
-    # \curl -s --connect-timeout 3 -o /dev/null http://1.1.1.1
-    cmd="wget --spider -q http://g.co"
-
-    if $cmd
-    then
-        isUP="Yes"
-    else
-        echo "Waiting for internet..."
-        sleep ${sleep_for}
-        [ $sleep_for -lt 60 ] && sleep_for=$((sleep_for*2))
-    fi
-done
-
-# echo 'Internet is up!'; exit
+echo -e "\nScript: $0"
+echo "Date & Time: $(date +%c)\n"
 
 # Alternativly, use git status --porcelain as per https://stackoverflow.com/a/25149786/1004587
 
