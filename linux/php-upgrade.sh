@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# version: 2023.07.09
+#   - fix a bug where web_developer_username was not defined.
 # version: 2022.07.21
 #   - fix an issue where php-package_name is installed by default irrespective of supplied PHP version.
 #   - take a backup of /etc
@@ -37,6 +39,7 @@ echo "Setting up PHP..."
 # get the variables
 [ -f /root/.envrc ] && source /root/.envrc
 
+web_developer_username=${WP_USERNAME:-""}
 if [ -z "$web_developer_username" ]; then
     echo '$web_developer_username is not found'
     echo 'If you use a different variable name for SFTP User, please update the script and re-run'
