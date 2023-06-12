@@ -39,9 +39,9 @@ echo "Setting up PHP..."
 # get the variables
 [ -f /root/.envrc ] && source /root/.envrc
 
-web_developer_username=${WP_USERNAME:-""}
-if [ -z "$web_developer_username" ]; then
-    echo '$web_developer_username is not found'
+php_user=${WP_USERNAME:-""}
+if [ -z "$php_user" ]; then
+    echo 'SFTP User is not found'
     echo 'If you use a different variable name for SFTP User, please update the script and re-run'
     echo 'SFTP User is not found. Exiting prematurely!'; exit
 fi
@@ -74,8 +74,10 @@ exec 2> >(tee -a ${LOG_FILE} >&2)
 echo "Log file can be found at /root/log/php${php_ver}-install.log"
 
 sudo apt-get install software-properties-common
-if ! grep -q 'ondrej/php' /etc/apt/sources.list.d/*.list ; then
+if ! grep -q 'php' /etc/apt/sources.list.d/*.list ; then
+    # for Ubuntu
     sudo add-apt-repository --update ppa:ondrej/php -y
+    # TODO: For Debian - https://packages.sury.org/php/README.txt
 fi
 # sudo apt-get update
 
@@ -115,8 +117,6 @@ if [ ! -d "$BACKUP_PHP_DIR" ]; then
 fi
 
 home_basename=web
-wp_user=${web_developer_username:-""}
-php_user=$wp_user
 
 fpm_ini_file=/etc/php/${php_ver}/fpm/php.ini
 pool_file=/etc/php/${php_ver}/fpm/pool.d/${php_user}.conf
@@ -200,6 +200,7 @@ fi
 sed -i -e 's/^pm = .*/pm = '$PM_METHOD'/' $pool_file
 sed -i '/^pm.max_children/ s/=.*/= '$max_children'/' $pool_file
 
+# the script may stop here, if PHP_MIN evaluated to 0 (zero).
 PHP_MIN=$(expr $max_children / 10)
 
 sed -i '/^;catch_workers_output/ s/^;//' $pool_file
