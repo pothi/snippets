@@ -1,6 +1,9 @@
 #!/bin/bash
 
-# version: 2023.07.09
+# version: 2023.07.12
+#   - configure PHP version via update-alternatives
+#   - add PATH and set noninteractive for apt
+# version: 2023.06.09
 #   - fix a bug where web_developer_username was not defined.
 # version: 2022.07.21
 #   - fix an issue where php-package_name is installed by default irrespective of supplied PHP version.
@@ -15,29 +18,43 @@
 
 # Difference between this and php-installation.sh file
 #   - Ondrej repo is installed
-#   - lb.conf is not modified
-#   - lb.conf is not removed
 
-# Defining return code check function
-check_result() {
-    if [ $? -ne 0 ]; then
-        echo; echo "Error: $1"; echo
-        exit 1
-    fi
-}
+# helper function to exit upon non-zero exit code of a command
+# usage some_command; check_result $? 'some_command failed'
+if ! $(type 'check_result' 2>/dev/null | grep -q 'function') ; then
+    check_result() {
+        if [ "$1" -ne 0 ]; then
+            echo -e "\nError: $2. Exiting!\n"
+            exit "$1"
+        fi
+    }
+fi
 
 # programming env: these switches turn some bugs into errors
 set -o errexit -o pipefail -o noclobber -o nounset
+
+export PATH=~/bin:~/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+export DEBIAN_FRONTEND=noninteractive
 
 # Variable/s
 # web_developer_username=
 # PHP_MAX_CHILDREN=
 # MY_MEMCACHED_MEMORY
 
+php_ver=8.2
+
 echo "Setting up PHP..."
 
-# get the variables
-[ -f /root/.envrc ] && source /root/.envrc
+# if ~/.envrc doesn't exist, create it
+if [ ! -f "$HOME/.envrc" ]; then
+    touch ~/.envrc
+    chmod 600 ~/.envrc
+# if exists, source it to apply the env variables
+else
+    . /root/.envrc
+fi
+
+echo "export PHP_VERSION=$php_ver" >> /root/.envrc
 
 php_user=${WP_USERNAME:-""}
 if [ -z "$php_user" ]; then
@@ -45,9 +62,6 @@ if [ -z "$php_user" ]; then
     echo 'If you use a different variable name for SFTP User, please update the script and re-run'
     echo 'SFTP User is not found. Exiting prematurely!'; exit
 fi
-
-# php${php_ver}-mysqlnd package is not found in Ubuntu
-php_ver=8.2
 
 # to manage multiple PHP versions
 # update-alternatives –-config php
@@ -58,7 +72,7 @@ php_ver=8.2
 # take a backup
 backup_dir="/root/backups/etc-php-$(date +%F)"
 if [ ! -d "$backup_dir" ]; then
-    printf '%-72s' "Taking a backup..."
+    printf '%-72s' "Taking a backup of /etc/php ..."
     mkdir -p $backup_dir
     cp -a /etc/php $backup_dir
     echo done.
@@ -181,6 +195,9 @@ export PHP_EXEC_FUNCTIONS='escapeshellarg,escapeshellcmd,exec,passthru,proc_clos
 sed -i "/disable_functions/c disable_functions = ${PHP_PCNTL_FUNCTIONS},${PHP_EXEC_FUNCTIONS}" $fpm_ini_file
 
 [ ! -f $pool_file ] && cp /etc/php/${php_ver}/fpm/pool.d/www.conf $pool_file
+# remove it manually, if everything goes through.
+# [ -f "/etc/php/${php_ver}/fpm/pool.d/www.conf" ] && rm /etc/php/${php_ver}/fpm/pool.d/www.conf
+
 sed -i -e 's/^\[www\]$/['$php_user']/' $pool_file
 sed -i -e 's/www-data/'$php_user'/' $pool_file
 sed -i -e '/^;listen.\(owner\|group\|mode\)/ s/^;//' $pool_file
@@ -243,4 +260,8 @@ printf '%-72s' "Restarting Nginx..."
 /usr/sbin/nginx -t 2>/dev/null && systemctl restart nginx
 echo done.
 
+# configure CLI version
+update-alternatives --set php /usr/bin/php${php_ver}
+
+echo "You may remove /etc/php/${php_ver}/fpm/pool.d/www.conf manually, if everything works!"
 echo; echo 'All done with PHP-FPM!'; echo;
