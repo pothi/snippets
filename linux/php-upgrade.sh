@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# TODO:
+#   For Debian - https://packages.sury.org/php/README.txt
+#   Supply PHP version as argument.
+
 # version: 2023.07.12
 #   - configure PHP version via update-alternatives
 #   - add PATH and set noninteractive for apt
@@ -88,40 +92,38 @@ exec 2> >(tee -a ${LOG_FILE} >&2)
 echo "Log file can be found at /root/log/php${php_ver}-install.log"
 
 sudo apt-get install software-properties-common
-if ! grep -q 'php' /etc/apt/sources.list.d/*.list ; then
+if ! grep -q 'php' /etc/apt/sources.list.d/*.list >/dev/null ; then
     # for Ubuntu
-    sudo add-apt-repository --update ppa:ondrej/php -y
+    add-apt-repository --update ppa:ondrej/php -y
     # TODO: For Debian - https://packages.sury.org/php/README.txt
 fi
 # sudo apt-get update
 
 # if you wish to configure the PHP version, please see above
-php_packages="php${php_ver}-fpm \
-    php${php_ver}-mysql \
-    php${php_ver}-gd \
-    php${php_ver}-cli \
-    php${php_ver}-xml \
-    php${php_ver}-mbstring \
-    php${php_ver}-soap \
-    php${php_ver}-curl \
-    php${php_ver}-zip \
-    php${php_ver}-bcmath \
-    php${php_ver}-intl
-    php${php_ver}-imagick"
-
-for package in $php_packages
-do
-    if dpkg-query -W -f='${Status}' $package 2>/dev/null | grep -q "ok installed"
-    then
-        # echo "'$package' is already installed"
-        :
-    else
-        printf '%-72s' "Installing '${package}' ..."
-        apt-get -qq install $package &> /dev/null
-        check_result $? "Error installing ${package}."
-        echo done.
-    fi
-done
+package=php${php_ver}-fpm
+if dpkg-query -W -f='${Status}' $package 2>/dev/null | grep -q "ok installed"
+then
+    # echo "'$package' is already installed."
+    :
+else
+    printf '%-72s' "Installing php${php_ver} ..."
+    apt-get -qq install \
+        php${php_ver}-fpm \
+        php${php_ver}-mysql \
+        php${php_ver}-gd \
+        php${php_ver}-cli \
+        php${php_ver}-xml \
+        php${php_ver}-mbstring \
+        php${php_ver}-soap \
+        php${php_ver}-curl \
+        php${php_ver}-zip \
+        php${php_ver}-bcmath \
+        php${php_ver}-intl \
+        php${php_ver}-imagick \
+        > /dev/null
+    check_result $? "Couldn't install PHP."
+    echo done.
+fi
 
 # let's take a backup of config before modifing them
 [ ! -d /root/backups ] && mkdir /root/backups
@@ -196,7 +198,7 @@ sed -i "/disable_functions/c disable_functions = ${PHP_PCNTL_FUNCTIONS},${PHP_EX
 
 [ ! -f $pool_file ] && cp /etc/php/${php_ver}/fpm/pool.d/www.conf $pool_file
 # remove it manually, if everything goes through.
-# [ -f "/etc/php/${php_ver}/fpm/pool.d/www.conf" ] && rm /etc/php/${php_ver}/fpm/pool.d/www.conf
+[ -f "/etc/php/${php_ver}/fpm/pool.d/www.conf" ] && mv /etc/php/${php_ver}/fpm/pool.d/www.conf ~/backups/php${php_ver}-www.conf-$(date +%F)
 
 sed -i -e 's/^\[www\]$/['$php_user']/' $pool_file
 sed -i -e 's/www-data/'$php_user'/' $pool_file
