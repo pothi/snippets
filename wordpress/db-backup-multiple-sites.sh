@@ -8,14 +8,14 @@ version=2023.07.13
 
 export PATH=~/bin:~/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
 
-db_name=mig.sql
+db_name=db.sql
 
 cd ~/sites > /dev/null
 
 # go through each directory
-for i in $(find * -maxdepth 0 -type d); do
-    [ -f ${i}/${db_name} ] && rm ${i}/${db_name}
-    wp --path=${i}/public db export --add-drop-table ${i}/${db_name}
+for domain in $(find * -maxdepth 0 -type d); do
+    [ -f ${domain}/${db_name} ] && rm ${domain}/${db_name}
+    wp --path=${domain}/public db export --add-drop-table ${domain}/${db_name}
 done
 
 cd - > /dev/null
