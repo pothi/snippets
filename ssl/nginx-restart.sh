@@ -2,11 +2,14 @@
 
 # nginx restart script for certbot
 
-# version=2.2
+# version=2.3
 
 # put it in /etc/letsencrypt/renewal-hooks/deploy/
 # make it executable (chmod +x)
 
+# version: 2.3
+#   - date: 2023-07-25
+#   - improve readability of expiry dates in console output and in email.
 # version: 2.2
 #   - date: 2023-02-20
 #   - Use ADMIN_EMAIL for alerts, if CERTBOT_ADMIN_EMAIL isn't available
@@ -58,8 +61,8 @@ fi
 new_expiry_date=$(cat "${RENEWED_LINEAGE}/fullchain.pem" | openssl x509 -noout -dates | grep notAfter | awk -F= '{print $2}' | cut -d ' ' -f 1,2,4)
 
 if command -v mail >/dev/null; then
-    printf '\nCertificate for the domain %s is renewed.\n\nThe old expiry date was %s.\nThe new expiry date is %s.\n\nIf you did not expect the above output, please check the logs at /var/log/letsencrypt/.\n' "$certbot_domain" "$old_expiry_date" "$new_expiry_date" | mail -s "Renewal of $certbot_domain" $certbot_admin_email
+    printf '\nCertificate for the domain %s is renewed.\n\nThe old expiry date: %s.\nThe new expiry date: %s.\n\nIf you did not expect the above output, please check the logs at /var/log/letsencrypt/.\n' "$certbot_domain" "$old_expiry_date" "$new_expiry_date" | mail -s "Renewal of $certbot_domain" $certbot_admin_email
 else
     echo >&2 "[Warn]: 'mail' command is not found in \$PATH; Email alerts will not be sent!"
-    printf '\nCertificate for the domain %s is renewed.\n\nThe old expiry date was %s.\nThe new expiry date is %s.\n\nIf you did not expect the above output, please check the logs at /var/log/letsencrypt/.\n' "$certbot_domain" "$old_expiry_date" "$new_expiry_date"
+    printf '\nCertificate for the domain %s is renewed.\n\nThe old expiry date: %s.\nThe new expiry date: %s.\n\nIf you did not expect the above output, please check the logs at /var/log/letsencrypt/.\n' "$certbot_domain" "$old_expiry_date" "$new_expiry_date"
 fi
