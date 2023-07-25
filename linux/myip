@@ -1,7 +1,17 @@
 #!/usr/bin/env bash
 
-# version 1.3
+# TODO: use alternate method, if one doesn't work.
+# TODO: use multiple methods to get different IPs used by BSNL in its load balancer.
+
+# version 2.0
 # changelog
+# 2.0:
+#   - date: 2023-07-25
+#   - change default method from dns to http, after dns method started returning mis-information!
+#   - remove echo for http method after showing the result. echo is still needed if we run the command without a script
+#   - assign variable to each method.
+#   - remove ftp method, as ftp command is not available on macOS.
+#   - remove telnet method, even though nc command is available on macOS. Just a red flag whenever we use nc command.
 # 1.3:
 #   - date: 2023-01-12
 #   - include timeout for curl - default 5 min! https://unix.stackexchange.com/a/94612/20241
@@ -13,17 +23,26 @@
 #   - date: 2022-01-07
 #   - use \dig and \curl to avoid conflicts with local aliases
 
-# benchmark of all methods
-# https://unix.stackexchange.com/a/194136/20241
+# all methods
+# https://unix.stackexchange.com/q/22615/20241
 
 # ipv4
 # curl http://whatismyip.akamai.com && echo
+# dig +short whoami.akamai.net @ns1-1.akamaitech.net
+# curl canhazip.com
+# curl -s checkip.dyndns.org | sed -e 's/.*Current IP Address: //' -e 's/<.*$//'
+# curl http://checkip.amazonaws.com
 
 # ipv6
 # curl http://ipv6.whatismyip.akamai.com && echo
+# dig +short myip.opendns.com AAAA -6 @resolver1.ipv6-sandbox.opendns.com
+# dig +short myip.opendns.com AAAA -6 @resolver2.ipv6-sandbox.opendns.com
 
 # other methods
 # dig +short myip.opendns.com @resolver1.opendns.com
+# dig +short myip.opendns.com @resolver2.opendns.com
+# dig +short myip.opendns.com @resolver3.opendns.com
+# dig +short myip.opendns.com @resolver4.opendns.com
 
 # get external IP address
 # used for outgoing Internet connections
@@ -33,19 +52,20 @@
 # used by OCI - ref: https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellgettingstarted.htm#cloudshellgettingstarted_topic_getting_public_ip_address
 # curl -s checkip.dyndns.org | sed -e 's/.*Current IP Address: //' -e 's/<.*$//'
 
-myipv6=$( \curl --connect-timeout 5 -sL http://ipv6.whatismyip.akamai.com )
-if [ ! -z $myipv6 ]; then
-    echo $myipv6
+ipv6=$( \curl --connect-timeout 5 -sL http://ipv6.whatismyip.akamai.com )
+if [ ! -z $ipv6 ]; then
+    echo $ipv6
 fi
 
-myip=
+ip=
 case "$1" in
-    ""|dns) myip=$(\dig +short myip.opendns.com @resolver1.opendns.com) ;;
-    http) \curl -s http://whatismyip.akamai.com/ && echo ;;
-    https) \curl -s https://4.ifcfg.me/ ;;
-    ftp) echo close | ftp 4.ifcfg.me | awk '{print $4; exit}' ;;
-    telnet) nc 4.ifcfg.me 23 | grep IPv4 | cut -d' ' -f4 ;;
+    dns) ip=$(\dig +short myip.opendns.com @resolver1.opendns.com) ;;
+    ""|http) ip=$(\curl -s http://whatismyip.akamai.com/) ;;
+    # http) \curl -s http://whatismyip.akamai.com/ && echo ;;
+    https) ip=(\curl -s https://4.ifcfg.me/) ;;
+    # ftp) ip=$(echo close | ftp 4.ifcfg.me | awk '{print $4; exit}') ;;
+    # telnet) ip=$(nc 4.ifcfg.me 23 | grep IPv4 | cut -d' ' -f4) ;;
     *) echo Bad argument >&2 && exit 1 ;;
 esac
 
-echo "$myip"
+echo "$ip"
