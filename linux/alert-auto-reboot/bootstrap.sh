@@ -24,4 +24,5 @@ systemctl --user start alert-auto-reboot.service
 # Verify
 systemctl --user list-timers
 
+cd ~/ || exit 1
 
