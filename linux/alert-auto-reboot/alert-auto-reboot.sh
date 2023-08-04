@@ -14,9 +14,9 @@ email_address=${ADMIN_EMAIL:-"root@localhost"}
 
 if [ -f /var/run/reboot-required ]; then
     if command -v mail >/dev/null; then
-        echo "`hostname` will be rebooted, as per the schedule!" | mail -s "Auto Reboot" $email_address
+        echo "`hostname -f` will be rebooted, as per the schedule!" | mail -s "Auto Reboot" $email_address
     else
-        echo >&2 "`hostname` will be rebooted, as per the schedule!"
+        echo >&2 "`hostname -f` will be rebooted, as per the schedule!"
         echo >&2 "[Warn]: 'mail' command is not found in \$PATH; Email alerts will not be sent!"
     fi
 fi
