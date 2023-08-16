@@ -21,7 +21,7 @@ export PATH=~/bin:~/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
 [ -d /opt/local/bin ] && PATH=$PATH:/opt/local/bin
 
 echo -e "\nScript: $0"
-echo "Date & Time: $(date +%c)\n"
+echo -e "Date & Time: $(date +%c)\n"
 
 # Alternativly, use git status --porcelain as per https://stackoverflow.com/a/25149786/1004587
 
