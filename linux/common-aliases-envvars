@@ -18,10 +18,13 @@ IS_MAC=
 alias ll='ls -lh'
 
 # curl
+# let's not use brotli compression on desktop
+# so, if you'd like to test brotli compression, please use curlm or curlt
+# in this way, curlh and curld can be used to test gzip and / or deflate
 # desktop - Firefox on macOS - curlH - h for Header
-alias curlh='printf "\n%s\n\n" "User-agent: Desktop"; \curl -H "Accept-Encoding:gzip,deflate,br" -s -D- -o /dev/null -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/116.0"'
+alias curlh='printf "\n%s\n\n" "User-agent: Desktop"; \curl -H "Accept-Encoding:gzip,deflate" -s -D- -o /dev/null -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/116.0"'
 # same as curlh - curlD - d for Desktop
-alias curld='printf "\n%s\n\n" "User-agent: Desktop"; \curl -H "Accept-Encoding:gzip,deflate,br" -s -D- -o /dev/null -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/116.0"'
+alias curld='printf "\n%s\n\n" "User-agent: Desktop"; \curl -H "Accept-Encoding:gzip,deflate" -s -D- -o /dev/null -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/116.0"'
 # m for Mobile
 alias curlm='printf "\n%s\n\n" "User-agent: Mobile"; \curl -H "Accept-Encoding:gzip,deflate,br" -s -D- -o /dev/null -A "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"'
 # t for tablet
