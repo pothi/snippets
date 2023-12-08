@@ -51,7 +51,7 @@ ssl_utility=/root/bin/ssl-cert-check
 old_expiry_date=
 new_expiry_date=
 
-old_expiry_date=$(echo | openssl s_client --servername ${certbot_domain} -connect ${certbot_domain}:443 2>/dev/null | openssl x509 -noout -dates | grep notAfter | awk -F= '{print $2}' | cut -d ' ' -f 1,2,4)
+old_expiry_date=$(echo | openssl s_client --servername ${certbot_domain} -connect ${certbot_domain}:443 2>/dev/null | openssl x509 -noout -dates | grep notAfter | awk -F= '{print $2}' | awk '{print $1, $2, $4}')
 
 if nginx -t 2>/dev/null; then
     if ! systemctl restart nginx; then
