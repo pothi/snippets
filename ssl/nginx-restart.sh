@@ -2,11 +2,14 @@
 
 # nginx restart script for certbot
 
-version=2.4
+version=2.4.1
 
 # put it in /etc/letsencrypt/renewal-hooks/deploy/
 # make it executable (chmod +x)
 
+# version: 2.4.1
+#   - date: 2023-12-08
+#   - migrate from cut to awk for output processing
 # version: 2.4
 #   - date: 2023-07-29
 #   - simplify code
