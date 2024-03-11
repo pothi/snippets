@@ -34,7 +34,7 @@ fi
 echo "Running 'git status' on all directories inside ~/git/ ..."
 echo
 for repo in ~/git/*/; do
-    gitStatus=$(git -C "$repo" status --short)
+    gitStatus=$(git -C "$repo" status --short 2> /dev/null)
     if [ "$gitStatus" ] ; then
         echo "Current repo: $repo"
         echo -e "$gitStatus\n"
