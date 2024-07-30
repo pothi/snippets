@@ -58,7 +58,7 @@ else
     . /root/.envrc
 fi
 
-echo "export PHP_VERSION=$php_ver" >> /root/.envrc
+[ -z "$PHP_VERSION" ] && echo "export PHP_VERSION=$php_ver" >> /root/.envrc
 
 php_user=${WP_USERNAME:-""}
 if [ -z "$php_user" ]; then
