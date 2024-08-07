@@ -4,12 +4,10 @@ version=1.0
 
 [ -d ~/.config/systemd/user ] || mkdir -p ~/.config/systemd/user
 [ -d ~/.local/bin ] || mkdir -p ~/.local/bin
-cd ~/.config/systemd/user || exit 1
-wget -q https://github.com/pothi/snippets/raw/main/linux/alert-auto-reboot/alert-auto-reboot.service
-wget -q https://raw.githubusercontent.com/pothi/snippets/main/linux/alert-auto-reboot/alert-auto-reboot.timer
-cd ~/.local/bin || exit 1
-wget -q https://github.com/pothi/snippets/raw/main/linux/alert-auto-reboot/alert-auto-reboot.sh
-chmod +x alert-auto-reboot.sh
+wget -q -P ~/.config/systemd/user   https://github.com/pothi/snippets/raw/main/linux/alert-auto-reboot/alert-auto-reboot.service
+wget -q -P ~/.config/systemd/user   https://github.com/pothi/snippets/raw/main/linux/alert-auto-reboot/alert-auto-reboot.timer
+wget -q -P ~/.local/bin             https://github.com/pothi/snippets/raw/main/linux/alert-auto-reboot/alert-auto-reboot.sh
+chmod +x ~/.local/bin/alert-auto-reboot.sh
 
 systemctl --user enable alert-auto-reboot.timer
 
@@ -24,5 +22,4 @@ systemctl --user start alert-auto-reboot.service
 # Verify
 systemctl --user list-timers
 
-cd ~/ || exit 1
 
