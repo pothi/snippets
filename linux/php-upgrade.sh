@@ -4,6 +4,8 @@
 #   For Debian - https://packages.sury.org/php/README.txt
 #   Supply PHP version as argument.
 
+# version: 2024.08.08
+#   - install memcache & memcached extensions
 # version: 2023.07.12
 #   - configure PHP version via update-alternatives
 #   - add PATH and set noninteractive for apt
@@ -120,6 +122,8 @@ else
         php${php_ver}-bcmath \
         php${php_ver}-intl \
         php${php_ver}-imagick \
+        php${php_ver}-memcache \
+        php${php_ver}-memcached \
         > /dev/null
     check_result $? "Couldn't install PHP."
     echo done.
