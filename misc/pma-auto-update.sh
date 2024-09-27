@@ -48,6 +48,7 @@ function send_email() {
 TEMP_FILE='/tmp/pma-version.html'
 # PMAOLD=/tmp/old-pma
 randomBlowfishSecret=`openssl rand -base64 32`
+encryptedBlowFishSecret=`php -r 'echo bin2hex(random_bytes(32)) . PHP_EOL;'`
 
 [ -f ~/.envrc ] && source ~/.envrc
 
@@ -201,7 +202,9 @@ else
     sed -i -e "/controlpass/ s:=.*:= '${pma_db_pass}';:" $pmaconfigfile
 
     # setup blowfish
-    sed -i -e "/blowfish_secret/ s:=.*:= '${randomBlowfishSecret}';:" $pmaconfigfile
+    # sed -i -e "/blowfish_secret/ s:=.*:= '${randomBlowfishSecret}';:" $pmaconfigfile
+    # new method - checkout FAQ 2.10
+    sed -i -e "/blowfish_secret/ s:=.*:= 'sodium_hex2bin(${encryptedBlowFishSecret}');:" $pmaconfigfile
 
     # create the tables
     mysql -u$pma_db_user -p$pma_db_pass phpmyadmin < ${PMADIR}/sql/create_tables.sql &> /dev/null
