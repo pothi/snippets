@@ -1,10 +1,14 @@
 # To be installed at ~/.config/fish/conf.d/
 #--- PATHs ---#
 # to permanently add to PATH
-# fish_add_path ~/.local/bin
-# fish_add_path ~/bin
-set -x PATH "~/.local/bin" "$PATH"
-set -x PATH "~/bin" "$PATH"
+fish_add_path ~/.local/bin
+fish_add_path ~/bin
+# To remove, use `set -e PATH[1]`
+# ref: https://github.com/fish-shell/fish-shell/issues/2639
+
+# the following doesn't work as fish doesn't understand ~/ ($HOME)
+# set -x PATH "~/.local/bin" "$PATH"
+# set -x PATH "~/bin" "$PATH"
 
 # To use !! like bash
 # see file:///usr/local/share/doc/fish/cmds/abbr.html?highlight=alias#examples
