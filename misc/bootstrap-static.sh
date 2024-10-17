@@ -166,7 +166,7 @@ echo ---------------------------------- Nginx ----------------------------------
 # Download WordPress Nginx repo and copy its content to /etc/nginx
 [ ! -d ~/wp-nginx ] && {
     mkdir ~/wp-nginx
-    wget -q -O- https://github.com/pothi/wordpress-nginx/tarball/main | tar -xz -C ~/wp-nginx --strip-components=1
+    wget -q -O- https://github.com/pothi/wordpress-nginx/tarball/main | tar -xz -C !:1 --strip-components=1
     cp -a ~/wp-nginx/{conf.d,errors,globals,sites-available} /etc/nginx/
     [ ! -d /etc/nginx/sites-enabled ] && mkdir /etc/nginx/sites-enabled
     ln -fs /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf

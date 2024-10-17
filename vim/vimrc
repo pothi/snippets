@@ -4,6 +4,13 @@
 
 " -----------------------------------------------------------------------------------------------
 
+"  Set encoding
+scriptencoding utf-8
+set encoding=utf-8     
+   
+
+" -----------------------------------------------------------------------------------------------
+
 " Turn on syntax highlighting
 syntax on
 
@@ -77,7 +84,10 @@ set updatecount=0 " no swap file creation
 " set list lcs=trail:·,tab:»·
 
 " type 'set list' in the normal / command mode to see the following chars.
-set listchars=tab:>-,trail:%,nbsp:.,eol:$
+set list
+set listchars=trail:·,nbsp:.
+" set listchars=tab:>-,trail:·,nbsp:.
+" set listchars=tab:>-,trail:%,nbsp:.,eol:$
 
 " -----------------------------------------------------------------------------------------------
 
@@ -85,7 +95,7 @@ set listchars=tab:>-,trail:%,nbsp:.,eol:$
 " Automatic installation - https://github.com/junegunn/vim-plug/wiki/faq#automatic-installation
 " Also see: https://github.com/junegunn/vim-plug/wiki/tutorial#setting-up
 if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !\curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://github.com/junegunn/vim-plug/raw/master/plug.vim
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://github.com/junegunn/vim-plug/raw/master/plug.vim
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
@@ -128,12 +138,6 @@ let loaded_matchparen = 1
 " let hi MatchParen ctermbg=lightgray
 " set nu "number
 " set cursorline
-" -----------------------------------------------------------------------------------------------
-
-"  Set encoding
-scriptencoding utf-8
-set encoding=utf-8
-
 " -----------------------------------------------------------------------------------------------
 
 " 2017-10-09

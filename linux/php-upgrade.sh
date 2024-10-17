@@ -60,7 +60,7 @@ else
     . /root/.envrc
 fi
 
-[ -z "$PHP_VERSION" ] && echo "export PHP_VERSION=$php_ver" >> /root/.envrc
+# [ -z "$PHP_VERSION" ] && echo "export PHP_VERSION=$php_ver" >> /root/.envrc
 
 php_user=${WP_USERNAME:-""}
 if [ -z "$php_user" ]; then
@@ -80,7 +80,7 @@ backup_dir="/root/backups/etc-php-$(date +%F)"
 if [ ! -d "$backup_dir" ]; then
     printf '%-72s' "Taking a backup of /etc/php ..."
     mkdir -p $backup_dir
-    cp -a /etc/php $backup_dir
+    cp -a /etc/php !$
     echo done.
 fi
 
@@ -94,7 +94,7 @@ exec 2> >(tee -a ${LOG_FILE} >&2)
 echo "Log file can be found at /root/log/php${php_ver}-install.log"
 
 sudo apt-get install software-properties-common
-if ! grep -q 'php' /etc/apt/sources.list.d/*.list >/dev/null ; then
+if ! grep -q 'php' /etc/apt/sources.list.d/*.list &>/dev/null ; then
     # for Ubuntu
     add-apt-repository --update ppa:ondrej/php -y
     # TODO: For Debian - https://packages.sury.org/php/README.txt
