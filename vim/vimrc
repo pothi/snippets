@@ -8,14 +8,21 @@
 scriptencoding utf-8
 set encoding=utf-8     
    
-
 " -----------------------------------------------------------------------------------------------
 
 " Turn on syntax highlighting
 syntax on
 
 " -----------------------------------------------------------------------------------------------
+"*** Indentation ***"
+
 "  Tabs or Spaces "
+
+" indentation - purely with hard tabs
+set tabstop=4
+set shiftwidth=4
+" set noexpandtab
+" tip - :%retab! to convert spaces to tabs
 
 " while editing content for Github - purely without hard tabs
 " ref: http://vim.wikia.com/wiki/Indenting_source_code
@@ -26,21 +33,15 @@ set softtabstop=4
 " automatically convert tabs into space upon writing into a file
 autocmd BufWrite * :retab
 
-" -----------------------------------------------------------------------------------------------
-"*** Indentation ***"
-
-" indentation - purely with hard tabs
-set tabstop=4
-set shiftwidth=4
-" set noexpandtab
-" tip - :%retab! to convert spaces to tabs
-
 " indentation
 set autoindent
 set smartindent
-if has("autocmd")
-    filetype plugin indent on
-endif
+
+filetype plugin on
+filetype indent on
+
+autocmd FileType html :setlocal sw=2 ts=2 sts=2 expandtab " Two spaces for HTML files "
+autocmd FileType txt :setlocal sw=2 ts=2 sts=2 expandtab " Two spaces for TXT files "
 
 " for pasting indented text
 nnoremap <F2> :set invpaste paste?<CR>
@@ -124,7 +125,7 @@ autocmd VimEnter *
 
 " SearchHi plugin settings
 " https://github.com/qxxxb/vim-searchhi#highlight-style
-highlight CurrentSearch ctermfg=108 ctermbg=235 cterm=reverse,bold
+" highlight CurrentSearch ctermfg=108 ctermbg=235 cterm=reverse,bold
 " highlight CurrentSearch ctermbg=lightblue cterm=bold
 
 " -----------------------------------------------------------------------------------------------
@@ -132,7 +133,7 @@ highlight CurrentSearch ctermfg=108 ctermbg=235 cterm=reverse,bold
 " Disable highlighting matching parenthesis
 " comment it out if you need it back
 " see :help matchparen
-let loaded_matchparen = 1
+" let loaded_matchparen = 1
 
 " -----------------------------------------------------------------------------------------------
 " let hi MatchParen ctermbg=lightgray
@@ -149,7 +150,7 @@ set nojoinspaces
 " -----------------------------------------------------------------------------------------------
 
 " PATH to 'find' faster
-set path+=.,/etc/varnish/,/etc/nginx/,/etc/httpd24/
+set path+=.,/etc/nginx/
 
 " -----------------------------------------------------------------------------------------------
 
@@ -163,7 +164,8 @@ autocmd FileType html :setlocal sw=2 ts=2 sts=2 expandtab
 " file detection for nginx
 " ref: http://www.vim.org/scripts/script.php?script_id=1886
 " v1 au BufRead,BufNewFile /etc/nginx/*,/usr/local/nginx/conf/* if &ft == '' | setfiletype nginx | endif 
-au BufRead,BufNewFile /etc/nginx/*,/usr/local/nginx/conf/*,/home/web/sites/*nginx*.conf setfiletype nginx
+" au BufRead,BufNewFile /etc/nginx/*,/usr/local/nginx/conf/*,/home/web/sites/*nginx*.conf setfiletype nginx
+au BufRead,BufNewFile /etc/nginx/*,/usr/local/nginx/conf/*,*nginx*.conf setfiletype nginx
 
 " http://learnvimscriptthehardway.stevelosh.com/chapters/44.html
 " Detecting Filetypes - see the exercises
