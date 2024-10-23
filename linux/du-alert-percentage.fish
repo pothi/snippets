@@ -36,7 +36,7 @@ set sizeN (echo $sizeP | tr -d '%' )
 if test $sizeN -gt (math $threshold -1)
     echo (set_color red;)Alert(set_color normal;): The disk usage (set_color -o black;)$mount_vol(set_color normal;) is at (set_color -o red;){$sizeN}%(set_color normal;) that reached the threshold \({$threshold}%\)!
 
-    set email_msg (echo Alert: The disk usage $mount_vol is at {$sizeN}GB that reached the threshold \({$threshold}GB\)!)
+    set email_msg (echo Alert: The disk usage $mount_vol is at {$sizeN}% that reached the threshold \({$threshold}%\)!)
     if not set -q $admin_emails
         echo $email_msg | mail --append=Bcc:"$admin_emails" -s 'Disk Usage Alert' root@localhost
     else
