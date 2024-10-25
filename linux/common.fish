@@ -1,8 +1,12 @@
 # To be installed at ~/.config/fish/conf.d/
+
 #--- PATHs ---#
+
 # to permanently add to PATH
 fish_add_path ~/.local/bin
 fish_add_path ~/bin
+fish_add_path ~/Library/Python/3.12/bin
+
 # To remove, use `set -e PATH[1]`
 # ref: https://github.com/fish-shell/fish-shell/issues/2639
 
