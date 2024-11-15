@@ -10,7 +10,7 @@ set admin_emails
 
 # you may put it on /etc/update-motd.d/99-symlink_to_this_script to run it upon every login
 
-set ver 1.1
+set ver 1.2
 
 # https://docs.digitalocean.com/products/volumes/how-to/create/#automatically-format--mount
 # /etc/systemd/system/mnt-volume_*.mount
@@ -38,9 +38,9 @@ if test $sizeN -gt (math $threshold -1)
 
     set email_msg (echo Alert: The disk usage $mount_vol is at {$sizeN}% that reached the threshold \({$threshold}%\)!)
     if not set -q $admin_emails
-        echo $email_msg | mail --append=Bcc:"$admin_emails" -s 'Disk Usage Alert' root@localhost
+        echo $email_msg | mail --append=Bcc:"$admin_emails" -s 'Disk Usage Alert' root
     else
-        echo $email_msg | mail -s 'Disk Usage Alert' root@localhost
+        echo $email_msg | mail -s 'Disk Usage Alert' root
     end
 else
     echo The disk usage of (set_color -o black;)$mount_vol(set_color normal;) is at (set_color green;){$sizeN}%(set_color normal;), below the threshold {$threshold}%.
