@@ -10,10 +10,11 @@ abbr -a wget curl -sSOL
 
 # mail log
 # ref: https://apple.stackexchange.com/a/276325/24501
-abbr -a maillog "log stream --predicate  '(process == \"smtpd\") || (process == \"smtp\")' --info"
+abbr -a maillogstream "log stream --predicate  '(process == \"smtpd\") || (process == \"smtp\")' --info"
 
 # time machine log
 # ref: https://discussions.apple.com/thread/250942260
 abbr -a tmlog 'log show --predicate \'subsystem == "com.apple.TimeMachine"\' --info --last 1h | grep -F \'eMac\' | grep -Fv \'etat\' | awk -F\']\' \'{print substr($0,1,19), $NF}\''
+abbr -a tmlogstream "log stream --predicate 'subsystem == \"com.apple.TimeMachine\"' --info"
 # additional scripts...
 # https://discussions.apple.com/thread/251491948
