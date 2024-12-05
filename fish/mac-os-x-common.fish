@@ -6,7 +6,9 @@
 # -S: to show error messages when used with -s.
 # -O: save as remote file name
 # -L: follow redirect
-abbr -a wget curl -sSOL
+# abbr -a wget curl -sSOL
+# let wget2 handle wget
+abbr -a wget wget2
 
 # mail log
 # ref: https://apple.stackexchange.com/a/276325/24501
