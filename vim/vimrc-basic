@@ -20,7 +20,7 @@ syntax on
 
 "  Tabs or Spaces "
 
-" see: http://vim.wikia.com/wiki/Indenting_source_code
+" see: https://vim.wikia.com/wiki/Indenting_source_code
 
 " indentation - purely with hard tabs
 " set tabstop=4
@@ -29,10 +29,10 @@ syntax on
 " tip - :%retab! to convert spaces to tabs
 
 " while editing content for Github - purely without hard tabs
-" set expandtab
-" set tabstop=4
-" set shiftwidth=4
-" set softtabstop=4
+set expandtab
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
 " :%retab to replace existing tabs to spaces
 
 " automatically convert tabs into space upon writing into a file
@@ -162,3 +162,22 @@ set viminfo+=n~/.vim/viminfo
 autocmd BufWritePre * :TrailerTrim
 
 " -----------------------------------------------------------------------------------------------
+
+" ref: https://superuser.com/a/1516301/142306
+set modeline
+set modelines=2
+
+" -----------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+set modeline
+set modelines=2
