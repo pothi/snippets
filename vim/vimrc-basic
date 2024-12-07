@@ -75,8 +75,8 @@ set updatecount=0 " no swap file creation
 " Find unnecessary spaces and tabs
 
 " type 'set list' in the normal / command mode to see the following chars.
-set list
-set listchars=tab:▸\ ,trail:·,nbsp:.
+" set list
+" set listchars=tab:▸\ ,trail:·,nbsp:.
 " set listchars=tab:▸\ ,trail:·,nbsp:.,eol:¬
 
 " -----------------------------------------------------------------------------------------------
