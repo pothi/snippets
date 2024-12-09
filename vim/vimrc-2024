@@ -1,0 +1,141 @@
+
+" set this in $HOME/.vimrc or directly in $HOME/.vim/vimrc
+" recommended method is to copy it to ~/.vim/ folder.
+
+" -----------------------------------------------------------------------------------------------
+
+source ~/.config/vim/plugins/viminfo.vim
+
+" -----------------------------------------------------------------------------------------------
+
+"*** Indentation ***"
+"  Tabs or Spaces "
+" see: https://vim.wikia.com/wiki/Indenting_source_code
+
+" while editing content for Github - purely without hard tabs
+set expandtab
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+" :%retab to replace existing tabs to spaces
+
+" automatically convert tabs into space upon writing into a file
+" autocmd BufWrite * :retab
+
+" indentation
+set autoindent
+" set smartindent
+
+" autocmd FileType html :setlocal sw=2 ts=2 sts=2 expandtab " Two spaces for HTML files "
+" autocmd FileType txt :setlocal sw=2 ts=2 sts=2 expandtab " Two spaces for TXT files "
+
+" -----------------------------------------------------------------------------------------------
+
+" ref: https://superuser.com/a/1516301/142306
+" configure modelines
+set modeline
+set modelines=2
+
+" -----------------------------------------------------------------------------------------------
+
+" To have Vim jump to the last position when reopening a file
+" snippet taken directory from :help last-position-jump
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+" -----------------------------------------------------------------------------------------------
+
+" Search
+" don't highlight searched pattern
+set nohlsearch
+set incsearch
+set ignorecase
+
+" -----------------------------------------------------------------------------------------------
+
+" set NO backups
+set nobackup
+set nowritebackup " ref: http://stackoverflow.com/a/607475/1004587
+set updatecount=0 " no swap file creation
+
+" -----------------------------------------------------------------------------------------------
+
+" 2017-10-09
+set autowrite " Automatically :write before running commands
+
+" Use one space, not two, after punctuation.
+set nojoinspaces
+
+" -----------------------------------------------------------------------------------------------
+
+let vimPlugFile = "$HOME/.config/vim/autoload/plug.vim"
+" let vimPlugFile = "$HOME/.vim/autoload/plug.vim"
+" Plugin Loader - Vim Plug - https://github.com/junegunn/vim-plug
+" Automatic installation - https://github.com/junegunn/vim-plug/wiki/faq#automatic-installation
+" Also see: https://github.com/junegunn/vim-plug/wiki/tutorial#setting-up
+" if empty(glob('$HOME/.vim/autoload/plug.vim'))
+if empty(glob("$HOME/.config/vim/autoload/plug.vim"))
+    echo 'Downloading Plugin Loader - https://github.com/junegunn/vim-plug'
+    silent !curl -sSfLo $HOME/.config/vim/autoload/plug.vim --create-dirs https://github.com/junegunn/vim-plug/raw/master/plug.vim
+    echo 'Downloaded Plugin Loader - https://github.com/junegunn/vim-plug'
+    echo 'Run PlugInstall to install plugins.'
+endif
+
+" plugins
+" for local user
+" Ref: https://github.com/junegunn/vim-plug/wiki/tutorial#installing-plugins
+call plug#begin('~/.config/vim/plugged')
+
+Plug 'jiangmiao/auto-pairs'
+Plug 'csexton/trailertrash.vim'
+" Plug 'mattn/emmet-vim'
+
+call plug#end()
+
+" -----------------------------------------------------------------------------------------------
+
+" PATH to 'find' faster
+set path+=.,/etc/nginx/
+
+" -----------------------------------------------------------------------------------------------
+
+" Tweaks for specific file types
+
+" https://stackoverflow.com/a/159066/1004587
+" autocmd FileType html setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab
+" Two spaces for HTML files "
+" autocmd FileType html :setlocal sw=2 ts=2 sts=2 expandtab
+
+" file detection for nginx
+" ref: http://www.vim.org/scripts/script.php?script_id=1886
+" v1 au BufRead,BufNewFile /etc/nginx/*,/usr/local/nginx/conf/* if &ft == '' | setfiletype nginx | endif
+" au BufRead,BufNewFile /etc/nginx/*,/usr/local/nginx/conf/*,/home/web/sites/*nginx*.conf setfiletype nginx
+au BufRead,BufNewFile /etc/nginx/*,/usr/local/nginx/conf/*,*nginx*.conf setfiletype nginx
+
+" http://learnvimscriptthehardway.stevelosh.com/chapters/44.html
+" Detecting Filetypes - see the exercises
+" au BufNewFile,BufRead nginx*.conf set filetype=nginx
+
+" -----------------------------------------------------------------------------------------------
+
+" option for trailer trash plugin
+" https://github.com/csexton/trailertrash.vim
+autocmd BufWritePre * :TrailerTrim
+
+" -----------------------------------------------------------------------------------------------
+
+"  Set encoding
+" scriptencoding utf-8
+" set encoding=utf-8
+
+" -----------------------------------------------------------------------------------------------
+
+" -----------------------------------------------------------------------------------------------
+
+" Find unnecessary spaces and tabs
+
+" type 'set list' in the normal / command mode to see the following chars.
+" set list
+" set listchars=tab:▸\ ,trail:·,nbsp:.
+" set listchars=tab:▸\ ,trail:·,nbsp:.,eol:¬
+
+" -----------------------------------------------------------------------------------------------
