@@ -4,7 +4,14 @@
 
 " -----------------------------------------------------------------------------------------------
 
-source ~/.config/vim/plugins/viminfo.vim
+function SourceIfReadable( file )
+    if filereadable( glob( a:file ) )
+        execute 'source' a:file
+    endif
+endfunction
+
+" source ~/.config/vim/plugins/viminfo.vim
+call SourceIfReadable( '~/.config/vim/plugins/viminfo.vim' )
 
 " -----------------------------------------------------------------------------------------------
 
@@ -139,3 +146,4 @@ autocmd BufWritePre * :TrailerTrim
 " set listchars=tab:▸\ ,trail:·,nbsp:.,eol:¬
 
 " -----------------------------------------------------------------------------------------------
+
