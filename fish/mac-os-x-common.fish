@@ -1,5 +1,5 @@
 # specific to mac OS X
-# functions and aliases (abbr)
+# exports, functions and aliases (abbr)
 
 # replacement for wget
 # -s: silent mode to suppress progress meter or error messages.
@@ -7,8 +7,7 @@
 # -O: save as remote file name
 # -L: follow redirect
 # abbr -a wget curl -sSOL
-# let wget2 handle wget
-abbr -a wget wget2
+# update (on Dec 10, 2024): wget installed via `brew install wget2`.
 
 # mail log
 # ref: https://apple.stackexchange.com/a/276325/24501
@@ -20,3 +19,7 @@ abbr -a tmlog 'log show --predicate \'subsystem == "com.apple.TimeMachine"\' --i
 abbr -a tmlogstream "log stream --predicate 'subsystem == \"com.apple.TimeMachine\"' --info | awk -F']' '{print substr(\$0,1,19), \$NF}'"
 # additional scripts...
 # https://discussions.apple.com/thread/251491948
+
+# To fix perl errors while working with remote machines via SSH
+set -gx LANG "en_US.UTF-8"
+set -gx LC_ALL "en_US.UTF-8"
