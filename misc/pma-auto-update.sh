@@ -1,9 +1,11 @@
 #!/bin/bash
 
-# version: 2.3
-# date: 2022-02-21
+# version: 2.4
+# date: 2024-12-28
 
 # Changelog
+# 2.4:
+#   - fix an issue with blowfish_secret creation
 # 2.3:
 #   - fix the error while finding the latest version
 
@@ -204,7 +206,7 @@ else
     # setup blowfish
     # sed -i -e "/blowfish_secret/ s:=.*:= '${randomBlowfishSecret}';:" $pmaconfigfile
     # new method - checkout FAQ 2.10
-    sed -i -e "/blowfish_secret/ s:=.*:= 'sodium_hex2bin(${encryptedBlowFishSecret}');:" $pmaconfigfile
+    sed -i -e "/blowfish_secret/ s:=.*:= sodium_hex2bin('${encryptedBlowFishSecret}');:" $pmaconfigfile
 
     # create the tables
     mysql -u$pma_db_user -p$pma_db_pass phpmyadmin < ${PMADIR}/sql/create_tables.sql &> /dev/null
