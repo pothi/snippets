@@ -6,6 +6,7 @@
 # Changelog
 # 2.4:
 #   - fix an issue with blowfish_secret creation
+#   - hide core databases
 # 2.3:
 #   - fix the error while finding the latest version
 
@@ -211,9 +212,15 @@ else
     # create the tables
     mysql -u$pma_db_user -p$pma_db_pass phpmyadmin < ${PMADIR}/sql/create_tables.sql &> /dev/null
 
-    # Hide unnecessary databases
-    # sed -i "$ a\$cfg['Servers'][\$i]['hide_db'] = '^information_schema|performance_schema|mysql|phpmyadmin\$';" ${PMADIR}/config.inc.php
+    # Configure tmp dir
+    echo >> ${PMADIR}/config.inc.php
+    echo "// Custom configs" >> ${PMADIR}/config.inc.php
+    echo >> ${PMADIR}/config.inc.php
     sed -i "$ a\$cfg['TempDir'] = '/tmp/';" ${PMADIR}/config.inc.php
+    # Hide core databases
+    echo >> ${PMADIR}/config.inc.php
+    sed -i "$ a\$cfg['Servers'][\$i]['hide_db'] = '^information_schema|performance_schema|mysql|sys|phpmyadmin\$';" ${PMADIR}/config.inc.php
+    echo >> ${PMADIR}/config.inc.php
 fi
 
 # remove old files and phpinfo.php file
