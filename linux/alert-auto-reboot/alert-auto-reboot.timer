@@ -1,4 +1,8 @@
-# Version 1.0
+# Version 1.1
+# changelog:
+# version: 1.1
+#   - date: 2025-04-24
+#   - update docs
 # Keep it on ~/.config/systemd/user/
 
 # Run the following...
@@ -15,6 +19,7 @@ Unit=alert-auto-reboot.service
 
 OnCalendar=*-*-* 7:00
 RandomizedDelaySec=60m
+# When activated, it triggers the service immediately if it missed the last start time (option Persistent=true), for example due to the system being powered off
 Persistent=true
 
 [Install]
