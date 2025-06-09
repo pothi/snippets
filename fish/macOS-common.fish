@@ -23,3 +23,6 @@ abbr -a tmlogstream "log stream --predicate 'subsystem == \"com.apple.TimeMachin
 # To fix perl errors while working with remote machines via SSH
 set -gx LANG "en_US.UTF-8"
 set -gx LC_ALL "en_US.UTF-8"
+
+# for mkcert
+set -gx CAROOT "/Users/pothi/mkcert"
