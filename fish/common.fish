@@ -25,15 +25,15 @@ abbr -a !! --position anywhere --function last_history_item
 # see file:///usr/local/share/doc/fish/language.html#defining-aliases
 #--- aliases / functions ---#
 function curld
-    curl -H 'Accept-Encoding:gzip' -s -D- -o /dev/null -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:130.0) Gecko/20100101 Firefox/130.0' $argv
+    curl --compressed -s -D- -o /dev/null -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:130.0) Gecko/20100101 Firefox/130.0' $argv
 end
 
 function curlm
-    curl -H 'Accept-Encoding:gzip' -s -D- -o /dev/null -A 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.1 Mobile/15E148 Safari/604.1' $argv
+    curl --compressed -s -D- -o /dev/null -A 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.1 Mobile/15E148 Safari/604.1' $argv
 end
 
 function curlt
-    curl -H 'Accept-Encoding:gzip' -s -D- -o /dev/null -A 'Mozilla/5.0 (iPad; CPU OS 11_0 like Mac OS X) AppleWebKit/604.1.34 (KHTML, like Gecko) Version/11.0 Mobile/15A5341f Safari/604.1' $argv
+    curl --compressed -s -D- -o /dev/null -A 'Mozilla/5.0 (iPad; CPU OS 11_0 like Mac OS X) AppleWebKit/604.1.34 (KHTML, like Gecko) Version/11.0 Mobile/15A5341f Safari/604.1' $argv
 end
 
 #--- abbr ---#

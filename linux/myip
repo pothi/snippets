@@ -2,6 +2,8 @@
 
 # TODO: use alternate method, if one doesn't work.
 # TODO: use multiple methods to get different IPs used by BSNL in its load balancer.
+# - myip -a may try akamai server
+# - myip -o may try opendns server
 
 # version 2.0
 # changelog
