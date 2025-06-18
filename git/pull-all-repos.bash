@@ -33,8 +33,9 @@ inet=
 sleep_for=3
 
 while [ -z $inet ]; do
-    # \curl -s --connect-timeout 3 -o /dev/null http://1.1.1.1
-    cmd="wget --spider -q http://g.co"
+    # curl -s --connect-timeout 3 -o /dev/null http://1.1.1.1
+    # cmd="wget --spider -q http://g.co"
+    cmd="curl -s --connect-timeout 3 -o /dev/null http://1.1.1.1"
 
     if $cmd; then
         inet="Online"
