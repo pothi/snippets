@@ -1,3 +1,5 @@
+# copy any changes to github.com/pothi/snippets/fish/macOS-common.fish
+
 # specific to mac OS X
 # exports, functions and aliases (abbr)
 
@@ -20,9 +22,25 @@ abbr -a tmlogstream "log stream --predicate 'subsystem == \"com.apple.TimeMachin
 # additional scripts...
 # https://discussions.apple.com/thread/251491948
 
+# PATH with colon (in place of space)
+# DID NOT WORK as PATH is not FULLY set when this line is executed.
+# set path_with_colon (echo $PATH | sed 's_ /_:/_g')
+
 # To fix perl errors while working with remote machines via SSH
 set -gx LANG "en_US.UTF-8"
 set -gx LC_ALL "en_US.UTF-8"
 
 # for mkcert
 set -gx CAROOT "/Users/pothi/mkcert"
+
+# for go
+set -gx GOPATH "/Users/pothi/.local/share/go"
+# frankenphp isn't compatible with GOBIN
+# set -gx GOBIN "/Users/pothi/.local/bin"
+
+# workaround for frankenphp
+set -gx PHP_BINARY "/Users/pothi/.local/bin/php"
+function wp
+    /Users/pothi/.local/bin/frankenphp php-cli /Users/pothi/.local/share/wp-cli/wp-cli.phar $argv
+end
+
