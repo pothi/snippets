@@ -25,7 +25,7 @@ abbr -a !! --position anywhere --function last_history_item
 # see file:///usr/local/share/doc/fish/language.html#defining-aliases
 #--- aliases / functions ---#
 function curld
-    curl --compressed -s -D- -o /dev/null -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:130.0) Gecko/20100101 Firefox/130.0' $argv
+    curl --compressed -s -D- -o /dev/null -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:130.0) Gecko/20100101 Firefox/140.0' $argv
 end
 
 function curlm
