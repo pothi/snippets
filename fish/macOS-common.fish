@@ -10,6 +10,7 @@
 # -L: follow redirect
 # abbr -a wget curl -sSOL
 # update (on Dec 10, 2024): wget installed via `brew install wget2`.
+abbr -a wget wget2
 
 # mail log
 # ref: https://apple.stackexchange.com/a/276325/24501
@@ -31,16 +32,16 @@ set -gx LANG "en_US.UTF-8"
 set -gx LC_ALL "en_US.UTF-8"
 
 # for mkcert
-set -gx CAROOT "/Users/pothi/mkcert"
+set -gxp CAROOT ~/projects/mkcert
 
 # for go
-set -gx GOPATH "/Users/pothi/.local/share/go"
+set -gxp GOPATH ~/.local/share/go
 # frankenphp isn't compatible with GOBIN
 # set -gx GOBIN "/Users/pothi/.local/bin"
 
 # workaround for frankenphp
-set -gx PHP_BINARY "/Users/pothi/.local/bin/php"
-function wp
-    /Users/pothi/.local/bin/frankenphp php-cli /Users/pothi/.local/share/wp-cli/wp-cli.phar $argv
-end
+set -gxp PHP_BINARY ~/.local/bin/php
+# function wp
+    # /Users/pothi/.local/bin/frankenphp php-cli /Users/pothi/.local/share/wp-cli/wp-cli.phar $argv
+# end
 
