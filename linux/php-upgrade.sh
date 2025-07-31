@@ -47,7 +47,7 @@ export DEBIAN_FRONTEND=noninteractive
 # PHP_MAX_CHILDREN=
 # MY_MEMCACHED_MEMORY
 
-php_ver=8.3
+php_ver=8.4
 
 echo "Setting up PHP..."
 
