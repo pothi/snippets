@@ -25,7 +25,8 @@ abbr -a !! --position anywhere --function last_history_item
 # see file:///usr/local/share/doc/fish/language.html#defining-aliases
 #--- aliases / functions ---#
 function curld
-    curl --compressed -s -D- -o /dev/null -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:130.0) Gecko/20100101 Firefox/140.0' $argv
+    # get the user agent from Google Chrome at chrome://version/
+    curl --compressed -s -D- -o /dev/null -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36' $argv
 end
 
 function curlm

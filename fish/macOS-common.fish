@@ -10,7 +10,7 @@
 # -L: follow redirect
 # abbr -a wget curl -sSOL
 # update (on Dec 10, 2024): wget installed via `brew install wget2`.
-abbr -a wget wget2
+# abbr -a wget wget2
 
 # mail log
 # ref: https://apple.stackexchange.com/a/276325/24501
