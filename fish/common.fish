@@ -45,3 +45,4 @@ end
 # abbr for git commands
 abbr -a gc git commit -m
 abbr -a gp git push
+abbr -a wget wcurl
