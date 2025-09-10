@@ -1,10 +1,17 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# version: 2.4
-# date: 2024-12-28
+version=2.5
+
+# TODO: switch to fish
+# TODO: install any version through arg
+# TODO: install cron
 
 # Changelog
+# 2.5:
+#   - date: 2025-09-06
+#   - create log dir if it doesn't exist
 # 2.4:
+#   - date: 2024-12-28
 #   - fix an issue with blowfish_secret creation
 #   - hide core databases
 # 2.3:
@@ -25,6 +32,8 @@
 ### Variables
 
 LOGDIR=$HOME/log
+[ ! -d $LOGDIR ] && mkdir -p $LOGDIR
+
 LOG_FILE=$LOGDIR/phpmyadmin-updates.log
 # script output to log file (and to console)
 exec > >(tee -a ${LOG_FILE} )
