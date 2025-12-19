@@ -36,7 +36,7 @@ echo
 for repo in ~/git/*/; do
     gitStatus=$(git -C "$repo" status --short 2> /dev/null)
     if [ "$gitStatus" ] ; then
-        echo "Current repo: $repo"
+        echo "Repo: $repo"
         echo -e "$gitStatus\n"
     fi
 done
