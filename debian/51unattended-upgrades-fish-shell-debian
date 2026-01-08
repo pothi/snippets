@@ -1,0 +1,19 @@
+# Working
+# run `apt-cache policy` to values to fill below...
+Unattended-Upgrade::Origins-Pattern { "o=obs://build.opensuse.org/shells:fish:release:4/Debian_13,n=Debian_13"; };
+
+# Not working on Debian
+# Unattended-Upgrade::Allowed-Origins { "o=obs://build.opensuse.org/shells:fish:release:4/Debian_13,n=trixie"; };
+# Unattended-Upgrade::Origins-Pattern { "o=obs://build.opensuse.org/shells:fish:release:4/Debian_13,n=Debian_13"; };
+
+# Unattended-Upgrade::Origins-Pattern { "origin=LP-PPA-fish-shell-release-4,codename=trixie"; };
+# Unattended-Upgrade::Origins-Pattern { "o=LP-PPA-fish-shell-release-4,n=trixie"; };
+Unattended-Upgrade::Origins-Pattern { "o=obs://build.opensuse.org/shells:fish:release:4/Debian_13,n=Debian_13"; };
+
+# Not working on Debian
+# Unattended-Upgrade::Allowed-Origins { "o=obs://build.opensuse.org/shells:fish:release:4/Debian_13,n=trixie"; };
+# Unattended-Upgrade::Origins-Pattern { "o=obs://build.opensuse.org/shells:fish:release:4/Debian_13,n=Debian_13"; };
+
+# Unattended-Upgrade::Origins-Pattern { "origin=LP-PPA-fish-shell-release-4,codename=trixie"; };
+# Unattended-Upgrade::Origins-Pattern { "o=LP-PPA-fish-shell-release-4,n=trixie"; };
+
