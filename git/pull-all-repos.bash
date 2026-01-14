@@ -52,10 +52,18 @@ done
 echo 'Running git pull on ~/.ssh ...'
 git -C ~/.ssh pull -q
 
+SCAN_DIR=~/scm
+
+[ ! -d "$SCAN_DIR" ] && SCAN_DIR=~/git
+[ ! -d "$SCAN_DIR" ] && { echo 2> "Scan dir: $SCAN_DIR doesn't exist"; exit 1;}
+
+# echo "Scan dir: $SCAN_DIR"
+
 echo "Running 'git pull' on all directories inside ~/git/ ..."
-for repo in ~/git/*/; do
+for repo in ${SCAN_DIR}/*/; do
     # skip local repos (with no remote origin url)
-    if git -C "$repo" config remote.origin.url >/dev/null; then
+    # local repos don't have remote.origin.url
+    if git -C "$repo" config remote.origin.url --quiet ; then
         echo "Current dir: $repo"
         git -C "$repo" pull -q
 
