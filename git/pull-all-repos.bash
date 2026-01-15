@@ -59,11 +59,11 @@ SCAN_DIR=~/scm
 
 # echo "Scan dir: $SCAN_DIR"
 
-echo "Running 'git pull' on all directories inside ~/git/ ..."
+echo "Running 'git pull' on all directories inside $SCAN_DIR ..."
 for repo in ${SCAN_DIR}/*/; do
     # skip local repos (with no remote origin url)
     # local repos don't have remote.origin.url
-    if git -C "$repo" config remote.origin.url --quiet ; then
+    if git -C "$repo" config remote.origin.url &>/dev/null ; then
         echo "Current dir: $repo"
         git -C "$repo" pull -q
 
