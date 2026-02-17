@@ -13,12 +13,16 @@ set -o nounset
 
 # set -x
 
-export PATH=~/bin:~/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# local bin directories
+[ -d ~/bin ] && PATH=~/bin:$PATH
+[ -d ~/.local/bin ] && PATH=~/.local/bin:$PATH
 # OS specific PATH
 # snap on Debian / Ubuntu
 [ -d /snap/bin ] && PATH=$PATH:/snap/bin
-# port on macOS
-[ -d /opt/local/bin ] && PATH=$PATH:/opt/local/bin
+# port, homebrew on macOS
+[ -d /opt/local/bin ] && PATH=/opt/local/bin:$PATH
+[ -d /opt/homebrew/bin ] && PATH=/opt/homebrew/bin:$PATH
 
 [ ! -d ~/log ] && mkdir ~/log
 log_file=~/log/pull-all-repos.log
@@ -48,6 +52,11 @@ done
 
 # echo 'Internet is up!'
 # exit
+
+# git_location=$(which git)
+# echo "Git location: $git_location"
+
+exit
 
 echo 'Running git pull on ~/.ssh ...'
 git -C ~/.ssh pull -q
