@@ -56,8 +56,6 @@ done
 # git_location=$(which git)
 # echo "Git location: $git_location"
 
-exit
-
 echo 'Running git pull on ~/.ssh ...'
 git -C ~/.ssh pull -q
 
