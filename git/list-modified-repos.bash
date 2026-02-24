@@ -38,7 +38,7 @@ SCAN_DIR=~/scm
 
 # echo "Scan dir: $SCAN_DIR"
 
-echo "Running 'git status' on all directories inside ~/git/ ..."
+echo "Running 'git status' on all directories inside $SCAN_DIR ..."
 echo
 for repo in ${SCAN_DIR}/*/; do
     gitStatus=$(git -C "$repo" status --short 2> /dev/null)
