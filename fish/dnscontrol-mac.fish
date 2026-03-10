@@ -72,17 +72,18 @@ echo
 
 # download only if the binary is not already downloaded.
 if not test -f $downloads_dir/dnscontrol-$latest_version
+    # remove any old archive
+    set --local archive $downloads_dir/$latest_binary.tar.gz
+    test -f $archive; and rm $archive
+
     printf '%-72s' 'Downloading the latest version...'
-    curl -jsSL -o $downloads_dir/$latest_binary.tar.gz $download_url
+    curl -jsSL -o $archive $download_url
     if test $status -ne 0
         echo >&2 "Error downloading the latest version. Exiting prematurely."
         exit 1
     end
     echo done.
 
-    # remove any old archive
-    set --local archive $downloads_dir/$latest_binary.tar.gz
-    test -f $archive; and rm $archive
     printf '%-72s' 'Extracting the binary from the downloaded archive...'
     tar xf $archive --directory $downloads_dir/
     if test $status -ne 0
