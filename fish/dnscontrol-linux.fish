@@ -6,6 +6,8 @@
 
 # Requirements: curl and jq
 
+type -q jq; or begin; echo >&2 'jq command not found'; exit 1; end
+
 test -d ~/tmp/; or mkdir ~/tmp
 test -d ~/.local/downloads/; or mkdir ~/.local/downloads
 test -d ~/backups/; or mkdir ~/backups
