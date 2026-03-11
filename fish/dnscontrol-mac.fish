@@ -1,8 +1,11 @@
 #!/usr/bin/env fish
 
-set ver 2.2
+set ver 2.3
 
 # changelog
+# 2.3:
+#   - date: 2026-03-11
+#   - check for jq command.
 # 2.2:
 #   - date: 2026-03-09
 #   - improve logic when checking the latest version info.
@@ -32,6 +35,8 @@ test -d $downloads_dir; or mkdir -p $downloads_dir
 set current_version 0
 set action "update"
 
+type -q jq; or begin; echo >&2 'jq command not found'; exit 1; end
+
 set latest_version $(curl -jsL "https://api.github.com/repos/StackExchange/dnscontrol/tags" | jq -r '.[0].name' | awk -Fv '{print $2}')
 if test -z $latest_version
     echo 'Could not find the latest version from GitHub for some unknown reason.'
@@ -51,7 +56,7 @@ echo
 
 if test -f $bin_dir/dnscontrol
     set current_version ($bin_dir/dnscontrol version)
-    echo "Current Version: $current_version"
+    echo "Installed Version: $current_version"
 else
     set action "install"
 end
@@ -63,7 +68,7 @@ end
 # exit
 
 if test $current_version = $latest_version
-    echo "Latest version is already installed."
+    echo "Latest version ($latest_version) is already installed."
     exit 0
 else
     echo "Latest version: $latest_version"
