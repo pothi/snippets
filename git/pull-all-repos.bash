@@ -2,6 +2,13 @@
 
 # TODO: display full changes on repos that have something modified.
 
+ver=1.1
+
+# changelog
+# version: 1.1
+#   - date: 2026-03-13
+#   - better log output.
+
 # programming env: these switches turn some bugs into errors
 # set -o errexit
 # to capture non-zero exit code in the pipeline
@@ -66,12 +73,12 @@ SCAN_DIR=~/scm
 
 # echo "Scan dir: $SCAN_DIR"
 
-echo "Running 'git pull' on all directories inside $SCAN_DIR ..."
+echo "Running 'git pull' on all repos inside $SCAN_DIR ..."
 for repo in ${SCAN_DIR}/*/; do
     # skip local repos (with no remote origin url)
     # local repos don't have remote.origin.url
     if git -C "$repo" config remote.origin.url &>/dev/null ; then
-        echo "Current dir: $repo"
+        echo "Current repo: $repo"
         git -C "$repo" pull -q
 
         # Pull changes in submodule/s
