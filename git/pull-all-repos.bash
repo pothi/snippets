@@ -2,9 +2,13 @@
 
 # TODO: display full changes on repos that have something modified.
 
-ver=1.1
+ver=1.2
 
 # changelog
+# version: 1.2
+#   - date: 2026-03-13
+#   - display execution time
+#   - better log output.
 # version: 1.1
 #   - date: 2026-03-13
 #   - better log output.
@@ -38,6 +42,7 @@ exec 2> >(tee -a ${log_file} >&2)
 
 echo -e "\nScript: $0"
 echo "Date / Time: $(date +%c)"
+start=$(date +%s)
 
 # Test for internet
 inet=
@@ -63,18 +68,20 @@ done
 # git_location=$(which git)
 # echo "Git location: $git_location"
 
-echo 'Running git pull on ~/.ssh ...'
+printf '\n%s\t' "Running 'git pull' on ~/.ssh ... "
 git -C ~/.ssh pull -q
+echo -e 'done.\n'
 
-SCAN_DIR=~/scm
+SCAN_DIR=scm
 
-[ ! -d "$SCAN_DIR" ] && SCAN_DIR=~/git
-[ ! -d "$SCAN_DIR" ] && { echo 2> "Scan dir: $SCAN_DIR doesn't exist"; exit 1;}
+# set -x
+[ ! -d "$HOME/$SCAN_DIR" ] && SCAN_DIR=git
+[ ! -d "$HOME/$SCAN_DIR" ] && { echo 2> "Scan dir: ~/$SCAN_DIR doesn't exist"; exit 1;}
 
-# echo "Scan dir: $SCAN_DIR"
+# echo "Scan dir: ~/$SCAN_DIR"
 
-echo "Running 'git pull' on all repos inside $SCAN_DIR ..."
-for repo in ${SCAN_DIR}/*/; do
+echo "Running 'git pull' on all repos in ~/$SCAN_DIR ..."
+for repo in $HOME/${SCAN_DIR}/*/; do
     # skip local repos (with no remote origin url)
     # local repos don't have remote.origin.url
     if git -C "$repo" config remote.origin.url &>/dev/null ; then
@@ -89,5 +96,10 @@ for repo in ${SCAN_DIR}/*/; do
         echo "Skipped local repo: $repo"
     fi
 done
+echo
 
-echo -e 'Done.\n'
+echo "Date / Time: $(date +%c)"
+end=$(date +%s)
+echo "Execution time: $(($end - $start)) seconds."
+
+echo -e 'All done.\n'
