@@ -44,7 +44,7 @@ for repo in $HOME/$scan_dir/*
     end
 end
 
-if test -z any_changes
+if test -z $any_changes
     echo No changes found in ~/$scan_dir
 end
 
