@@ -40,7 +40,7 @@ for repo in $HOME/$scan_dir/*
         set any_changes yes
         echo
         echo Repo: $repo
-        echo -e $git_status\n
+        printf '%s\n' $git_status
     end
 end
 
@@ -48,4 +48,4 @@ if test -z $any_changes
     echo No changes found in ~/$scan_dir
 end
 
-echo All done.; echo
+echo; echo All done.; echo
