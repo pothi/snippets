@@ -2,12 +2,17 @@
 
 set ver 1.0
 
+echo
+
 # check for changes in ~/.ssh dir
 set git_status (git -C ~/.ssh status --short)
 if not test -z "$git_status"
     echo 'git status on ~/.ssh ...'
     echo -e "$git_status\n"
+else
+    echo No changes on ~/.ssh
 end
+echo
 
 # check for changes in repos under version control
 set scan_dir scm
@@ -20,6 +25,8 @@ end
 
 # echo Scan dir: $scan_dir
 
+set any_changes
+
 echo Running 'git status' on repos inside ~/$scan_dir ...
 echo
 
@@ -31,7 +38,14 @@ for repo in $HOME/$scan_dir/*
 
     set git_status (git -C $repo status --short)
     if not test -z "$git_status"
+        set any_changes yes
         echo Repo: $repo
         echo -e $git_status\n
     end
 end
+
+if test -z any_changes
+    echo No changes found in ~/$scan_dir
+end
+
+echo All done.; echo
