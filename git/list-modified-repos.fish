@@ -10,7 +10,7 @@ if not test -z "$git_status"
     echo 'git status on ~/.ssh ...'
     echo -e "$git_status\n"
 else
-    echo No changes on ~/.ssh
+    echo "No changes on ~/.ssh"
 end
 echo
 
@@ -27,7 +27,7 @@ end
 
 set any_changes
 
-echo Running 'git status' on repos inside ~/$scan_dir ...
+echo "Running 'git status' on repos inside ~/$scan_dir ..."
 
 for repo in $HOME/$scan_dir/*
     if not test -d $repo/.git
@@ -39,13 +39,13 @@ for repo in $HOME/$scan_dir/*
     if not test -z "$git_status"
         set any_changes yes
         echo
-        echo Repo: $repo
+        echo "Repo: $(basename $repo)"
         printf '%s\n' $git_status
     end
 end
 
 if test -z $any_changes
-    echo No changes found in ~/$scan_dir
+    echo "No changes found in ~/$scan_dir"
 end
 
 echo; echo All done.; echo
