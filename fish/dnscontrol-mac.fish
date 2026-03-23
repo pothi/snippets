@@ -37,6 +37,25 @@ set action "update"
 
 type -q jq; or begin; echo >&2 'jq command not found'; exit 1; end
 
+if not type -q is_internet_available
+    function is_internet_available
+        for sleep_duration in (seq 6 1)
+            sleep 1
+            ping -c 1 1.1.1.1 &> /dev/null
+            if test $status -eq 0
+                echo "✓ Internet connectivity: OK"
+                break
+            end
+            if test $sleep_duration -eq 1
+                echo >&2 'No Internet'
+                return 1
+            end
+        end
+    end
+end
+
+is_internet_available; or exit 1
+
 set latest_version $(curl -jsL "https://api.github.com/repos/StackExchange/dnscontrol/tags" | jq -r '.[0].name' | awk -Fv '{print $2}')
 if test -z $latest_version
     echo 'Could not find the latest version from GitHub for some unknown reason.'

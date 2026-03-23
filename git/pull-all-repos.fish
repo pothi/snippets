@@ -2,9 +2,12 @@
 
 # TODO: display full changes on repos that have something modified.
 
-set ver 1.0
+set ver 2.0
 
 # changelog
+# version: 2.0
+#   - date: 2026-03-23
+#   - simplified logic to find internet
 # version: 1.0
 #   - date: 2026-03-20
 #   - first commiit
@@ -17,27 +20,23 @@ begin
     echo "Date / Time: $(date +%c)"
     set -l start $(date +%s)
 
-    # Test for internet
-    set -l inet
-    set -l sleep_for 3
-
-    while test -z $inet
-        # curl -s --connect-timeout 3 -o /dev/null http://1.1.1.1
-        # cmd="wget --spider -q http://g.co"
-        set -l cmd (curl -s --connect-timeout 3 -o /dev/null http://1.1.1.1)
-        if test $status -eq 0
-            set inet Online
-        else
-            echo "Waiting for internet..."
-            echo Sleeping for $sleep_for seconds.
-            sleep $sleep_for
-            if test $sleep_for -lt 60
-                set sleep_for $(math "$sleep_for*2")
+    if not type --query is_internet_available
+        function is_internet_available
+            for sleep_duration in (seq 6 1)
+                sleep 1
+                ping -c 1 1.1.1.1 &> /dev/null
+                if test $status -eq 0
+                    echo "✓ Internet connectivity: OK"
+                    break
+                end
+                if test $sleep_duration -eq 1
+                    echo >&2 'No Internet'
+                    return 1
+                end
             end
         end
     end
-
-    echo 'Internet is up!'
+    is_internet_available; or exit 1
 
     # git_location=$(which git)
     # echo "Git location: $git_location"
