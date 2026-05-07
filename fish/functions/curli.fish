@@ -1,5 +1,5 @@
 function curli
-    set -l curli_bin "/Users/pothi/.local/downloads/curli/curl-impersonate"
+    set -l curli_bin ~/.local/downloads/curli/curl-impersonate
 
     if not test -x "$curli_bin"
         echo "Error: curl-impersonate not found at $curli_bin" >&2
