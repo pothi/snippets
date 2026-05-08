@@ -17,7 +17,7 @@ test -d $bin_dir; or mkdir -p $bin_dir
 
 set current_version 0
 
-set latest_version $(curl -jsL "https://api.github.com/repos/StackExchange/dnscontrol/tags" | jq -r '.[0].name' | awk -Fv '{print $2}')
+set latest_version $(curl -jsL "https://api.github.com/repos/DNSControl/dnscontrol/tags" | jq -r '.[0].name' | awk -Fv '{print $2}')
 set latest_binary dnscontrol_{$latest_version}_linux_(uname -m | sed s/aarch64/arm64/ | sed s/x86_64/amd64/)
 
 set download_url https://github.com/StackExchange/dnscontrol/releases/download/v$latest_version/$latest_binary.tar.gz

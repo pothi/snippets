@@ -59,9 +59,9 @@ end
 
 is_internet_available; or exit 1
 
-set upstream_version $(curl -jsL "https://api.github.com/repos/StackExchange/dnscontrol/tags" | jq -r '.[0].name' | awk -Fv '{print $2}')
+set upstream_version $(curl -jsL "https://api.github.com/repos/DNSControl/dnscontrol/tags" | jq -r '.[0].name' | awk -Fv '{print $2}')
 # alternative way
-# set upstream_version $(curl -fsSL 'https://api.github.com/repos/StackExchange/dnscontrol/releases/latest' | jq -r .tag_name | awk -Fv '{print $2}')
+# set upstream_version $(curl -fsSL 'https://api.github.com/repos/DNSControl/dnscontrol/releases/latest' | jq -r .tag_name | awk -Fv '{print $2}')
 if test -z $upstream_version
     echo 'Could not find the latest version from GitHub for some unknown reason.'
     echo 'Probably check the internet connection.'
