@@ -2,6 +2,8 @@
 
 set ver 1.1
 
+#TODO: check if the directory is empty; rmdir if empty and pull all repos
+
 # changelog
 # version: 1.1
 #   - date: 2026-03-13
@@ -15,7 +17,7 @@ set --local --export PATH ~/bin ~/.local/bin /usr/local/sbin /usr/local/bin /usr
 # check for gh-clone-org extension
 
 # set clone_path ~/backups/github-repos-(date +%Y-%m)
-set clone_path ~/projects/clone-all-github-repos/(date +%Y-%m)
+set clone_path ~/archive/clone-all-github-repos/(date +%Y-%m)
 if test -d $clone_path
     echo
     echo Backups are taken for this month!
