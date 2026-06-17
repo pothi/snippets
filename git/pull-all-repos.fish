@@ -79,5 +79,6 @@ begin
     echo "Execution time: $(math $end - $start) seconds."
 
     echo -e 'All done.\n'
+    osascript -e 'display notification "All repos pulled!" with title "Pull all repos script"' 2>/dev/null
 
 end 2>&1 | tee -a ~/log/pull-all-repos.log
