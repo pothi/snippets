@@ -1,11 +1,13 @@
 #!/usr/bin/env fish
 
+# xAI - https://grok.com/share/c2hhcmQtMi1jb3B5_8d1da331-5a7a-4ac0-a157-425b2cbe5160
+
 # === CONFIG ===
-set KNOWN_VERSION "3.3.17"          # ← Update this to your current installed version
+set KNOWN_VERSION "3.3.15"          # ← Update this to your current installed version
 set EMAIL_TO "pothi"
 set EMAIL_SUBJECT "phpBB Update Available!"
 set LOG_FILE "~/log/phpbb-update-check.log"
-set STATE_FILE "$HOME/.phpbb_latest_version"
+set STATE_FILE "$HOME/.cache/phpbb_latest_version"
 set ENV_FILE "$HOME/.env"
 
 # Load from ~/.env if it exists

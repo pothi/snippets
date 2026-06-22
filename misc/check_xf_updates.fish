@@ -71,7 +71,9 @@ if test "$NEWEST_LINK" != "$LAST_LINK"
 
     # Local macOS Desktop Notification (Triggered regardless of email settings if on macOS)
     if test (uname) = "Darwin"
-        osascript -e "display notification \"New XenForo update available!\" with title \"XenForo Monitor\" open location \"$NEWEST_LINK\""
+        # Safely pass the URL using AppleScript's native quote handling
+        osascript -e "display notification \"New XenForo update available!\" with title \"XenForo Monitor\"" \
+                  -e "open location \"$NEWEST_LINK\""
     end
 
     # Email Notification (Triggered only if an email address was found)
