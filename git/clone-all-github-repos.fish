@@ -1,47 +1,88 @@
 #!/usr/bin/env fish
 
-set ver 1.1
+set --local ver 2.0
 
-#TODO: check if the directory is empty; rmdir if empty and pull all repos
+test -d ~/log; or mkdir ~/log
+set --local log_file ~/log/(status basename | awk -F. '{print $1}').log
+
+set user "pothi"
+set --local clone_path ~/archive/clone-all-github-repos/(date +%Y-%m)
 
 # changelog
+# 2.0
+#   - date: 2026-06-23
+#   - tweaks from xAI
+#   - Added envsource + GH_TOKEN support
+#   - Better logging structure
 # version: 1.1
 #   - date: 2026-03-13
 #   - minor improvements
 
 set --local --export PATH ~/bin ~/.local/bin /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /snap/bin
 
-# echo PATH: $PATH
-
-# check for github cli
-# check for gh-clone-org extension
-
-# set clone_path ~/backups/github-repos-(date +%Y-%m)
-set clone_path ~/archive/clone-all-github-repos/(date +%Y-%m)
-if test -d $clone_path
-    echo
-    echo Backups are taken for this month!
-    echo Check the directory $clone_path
-    echo
-    exit 0
-else
-    mkdir -p $clone_path
+# === Load GH_TOKEN from ~/.env (standard format) ===
+if not set -q GH_TOKEN
+    if test -f ~/.env
+        envsource ~/.env
+    end
 end
 
-# set gh_cli ~/.local/bin/gh
+if not set -q GH_TOKEN
+    echo "Error: GH_TOKEN not set. Add it to ~/.env" | tee -a $log_file
+    exit 1
+end
 
-# $gh_cli clone-org --path $clone_path -y pothi
-# $gh_cli clone-org --path $clone_path -y -s is:private pothi
+# Check prerequisites
+if not command -q gh
+    echo "Error: gh CLI not found. Install with: apt install gh (Ubuntu)" | tee -a $log_file
+    exit 1
+end
 
-echo "Date / Time: $(date +%c)"
+gh auth status --show-token | grep -q "Token:" || begin
+    echo "Error: gh not authenticated. Run: gh auth login" | tee -a $log_file
+    exit 1
+end
+
+# Monthly check
+if test -d $clone_path && count $clone_path/* >/dev/null
+    echo "Backups already exist for this month: $clone_path" | tee -a $log_file
+    echo "=== Run skipped ===" | tee -a $log_file
+    exit 0
+end
+
+mkdir -p $clone_path 2> /dev/null
+
+echo "=== Run started: $(date +'%Y-%m-%d %H:%M:%S') ===" | tee -a $log_file
+
 set time_start (date +%s)
 
-gh clone-org --path $clone_path -y pothi
-gh clone-org --path $clone_path -y -s is:private pothi
+echo "Cloning public repos for $user..." | tee -a $log_file
+gh repo list $user --limit 200 --visibility public --json nameWithOwner -q '.[].nameWithOwner' | \
+    while read -l repo
+        if not test -d $clone_path/(string replace '/' '-' $repo)
+            echo "Cloning $repo (public)..." | tee -a $log_file
+            gh repo clone $repo $clone_path/(string replace '/' '-' $repo) -- --depth=1 2>&1 | tee -a $log_file
+        else
+            echo "Skipping existing: $repo" | tee -a $log_file
+        end
+    end
 
-echo "Date / Time: $(date +%c)"
+echo "Cloning private repos for $user..." | tee -a $log_file
+gh repo list $user --limit 200 --visibility private --json nameWithOwner -q '.[].nameWithOwner' | \
+    while read -l repo
+        if not test -d $clone_path/(string replace '/' '-' $repo)
+            echo "Cloning $repo (private)..." | tee -a $log_file
+            gh repo clone $repo $clone_path/(string replace '/' '-' $repo) -- --depth=1 2>&1 | tee -a $log_file
+        else
+            echo "Skipping existing: $repo" | tee -a $log_file
+        end
+    end
+
 set time_end (date +%s)
 set runtime (math $time_end - $time_start)
-set runtime_minutes (math -s0 $runtime / 60)
-set runtime_seconds (math $runtime % 60)
-echo Execution time: $runtime_minutes minutes $runtime_seconds seconds.
+set runtime_min (math -s0 $runtime / 60)
+set runtime_sec (math $runtime % 60)
+
+echo "Execution time: $runtime_min min $runtime_sec sec" | tee -a $log_file
+echo "=== Run completed successfully: $(date +'%Y-%m-%d %H:%M:%S') ===" | tee -a $log_file
+
