@@ -6,7 +6,7 @@
 set KNOWN_VERSION "3.3.15"          # ← Update this to your current installed version
 set EMAIL_TO "pothi"
 set EMAIL_SUBJECT "phpBB Update Available!"
-set LOG_FILE "~/log/phpbb-update-check.log"
+set LOG_FILE ~/log/phpbb-update-check.log
 set STATE_FILE "$HOME/.cache/phpbb_latest_version"
 set ENV_FILE "$HOME/.env"
 
