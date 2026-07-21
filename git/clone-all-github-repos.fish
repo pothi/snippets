@@ -1,6 +1,8 @@
 #!/usr/bin/env fish
 
 # changelog
+# 2.4 - 2026-07-21
+#   - change name from envsource to load_env
 # 2.3 - 2026-06-24
 #   - Fixed cron authentication issue
 # 2.0
@@ -24,7 +26,7 @@ set --local --export PATH ~/bin ~/.local/bin /opt/homebrew/bin /usr/local/bin $P
 # Load GH_TOKEN
 if not set -q GH_TOKEN
     if test -f ~/.env
-        envsource ~/.env
+        load_env ~/.env
     end
 end
 
